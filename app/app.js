@@ -1,5 +1,5 @@
 //=============================== MAIN ===================================
-var xClient = angular.module('X-Client', ['ui.router', 'ngResource','GUI','authentication'])
+var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
     .config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise('/offline');
@@ -60,102 +60,108 @@ var xClient = angular.module('X-Client', ['ui.router', 'ngResource','GUI','authe
         });
 
 }])
-    .controller('MainCtrl',[ '$scope','$state', 'authenticationService',function ($scope,$state,authenticationService) {
+    .controller('MainCtrl',[ '$scope','$state', 'AuthenticationService',function ($scope,$state,AuthenticationService) {
 
 
-    $scope.service = authenticationService;
-    $scope.$watch('service.getUser()', function(serviceValue) {
-        $scope.user = serviceValue;
-    });
 
-    $scope.user = null;
-
-
-    $scope.login = function(loginID, password) {
-
-        authenticationService.login(loginID,password);
-
-        $scope.$on('LOGIN_SUCCESS', function() {
+        $scope.$on('LOGIN_SUCCESS', function(event,data) {
             angular.element( document.querySelector( '.modal-backdrop' )).remove();
             $state.transitionTo('online');
+            $scope.user = data.email;
         });
 
-        $scope.$on('LOGIN_FAILED', function() {
-            alert('Invalid username or password');
+        $scope.$on('SIGNUP_SUCCESS', function(event,data) {
+
+            alert(data.email+' we have to do something now that you signed up...validate email or something :)');
         });
-
-    };
-    $scope.register = function(email,password,confirmPassword) {
-        $scope.registerResponse = authenticationService.register(email,password,confirmPassword);
-
-    };
-
 }]);
 
 
-//======================== AUTHENTICATION ==================================
-var authentication = angular.module('authentication',[])
-    .service('authenticationService',['$rootScope','$resource' ,function ($rootScope,$resource) {
+//======================== AUTHENTICATION =================================
+var Authentication = angular.module('Authentication',['Rest'])
+    .controller('AuthenticationCtrl',[ '$scope', 'AuthenticationService',function ($scope,AuthenticationService) {
 
-    //properties
-    var user = null;
+        $scope.$on('LOGIN_RESPONSE', function(event,data) {
 
-    //getters and setters
-    this.getUser = function(){return user;}
-
-    //methods
-    this.login = function (loginID, password) {
-
-        //$resource(url, [urlParameters], [actions], options);
-        var loginResource = $resource(
-            'http://localhost:8181/cxf/x-platform/authentication-rs/login',
-            {},
+            if(data.loginResponseType == 'LOGIN_SUCCESS')
             {
-                login:
-                {
-                    method: 'POST',
-                    interceptor:
-                    {
-                        response: function(response)
-                        {
-                            if(response.data.loginResponseType == 'LOGIN_SUCCESS' )
-                            {
-                                user = response.data.email;
-                            }
-                            $rootScope.$broadcast(response.data.loginResponseType);
-
-                        },
-                        responseError: function(responseError)
-                        {
-                            alert('Rest request failed !');
-                        }
-                    }
-                }
+                $scope.$emit(data.loginResponseType, data);
             }
-        );
+            else
+            {
+                alert('Invalid Username or Password');
+            }
 
-        var loginResponse = new loginResource();
-        loginResponse.loginID = loginID;
-        loginResponse.password = password;
+        });
+        $scope.$on('LOGIN_ERROR', function(event,errorCode) {
 
-        loginResponse.$login();
-    };
-    this.register = function (email, password, confirmPassword) {
+            alert('Login Request Error');
 
-        var registerSuccess= true;
-        if(registerSuccess)
-        {
-            return 'Register Success';
+        });
+        $scope.login = function(loginID,password){
+
+            AuthenticationService.login(loginID,password);
         }
 
-        return 'Register Failed';
-    };
+        $scope.register = function (email, password, confirmPassword) {
 
-}]);
+            if(confirmPassword!=password)
+            {
+                alert('Passwords do not match');
+                return;
+            }
+
+            AuthenticationService.register(email,password);
+
+        };
+        $scope.$on('REGISTER_RESPONSE', function(event,data) {
+
+            if(data.signUpResponseType == 'SIGNUP_SUCCESS')
+            {
+                $scope.$emit(data.signUpResponseType, data);
+            }
+            else if(data.signUpResponseType == 'ALREADY_REGISTERED')
+            {
+                alert('Email Already Registered, please Login instead');
+            }
+            else
+            {
+                alert('Sorry we cannot register your email address');
+            }
+
+        });
+        $scope.$on('REGISTER_ERROR', function(event,errorCode) {
+
+            alert('Register Request Error');
+
+        });
+
+    }])
+    .service('AuthenticationService',['$rootScope','RestService',function ($rootScope,RestService) {
+
+        this.login = function (loginID, password) {
+
+            var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/login';
+            var urlParams = {};
+            var headers = {};
+            var payload = {loginID:loginID, password:password};
+            RestService.post(url,urlParams,headers,payload,'LOGIN_RESPONSE','LOGIN_ERROR');
+
+        };
+        this.register = function (email, password) {
+
+            var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/signup';
+            var urlParams = {};
+            var headers = {};
+            var payload = {email:email, password:password};
+            RestService.post(url,urlParams,headers,payload,'REGISTER_RESPONSE','REGISTER_ERROR');
+
+        };
+
+    }]);
 
 
-
-//======================= GUI ==============================================
+//======================= GUI =============================================
 var GUI = angular.module('GUI',[])
     .controller('UICtrl',['$scope','$window', function ($scope,$window) {
 
@@ -332,3 +338,46 @@ var GUI = angular.module('GUI',[])
     };
 
 }]);
+
+
+//======================= REST ===========================================
+var Rest = angular.module('Rest',['ngResource'])
+    .service('RestService',['$rootScope','$resource' ,function ($rootScope,$resource) {
+
+        this.get = function(url,urlParams,headers,isArray,successEvent,errorEvent){}
+        this.post = function(url,urlParams,headers,payload,successEvent,errorEvent){
+
+            var resource = $resource(
+                url,
+                {},
+                {
+                    post:
+                    {
+                        method: 'POST',
+                        headers: headers,
+                        params : urlParams,
+                        interceptor:
+                        {
+                            response: function(response)
+                            {
+                                $rootScope.$broadcast(successEvent, response.data);
+                            },
+                            responseError: function(responseError)
+                            {
+                                $rootScope.$broadcast(errorEvent,responseError.status);
+                            }
+                        }
+                    }
+                }
+            );
+
+            resource.post(payload);
+        }
+
+
+        this.put = function(url,urlParams,headers,payload,successEvent,errorEvent){}
+        this.delete = function(url,urlParams,headers,payload,successEvent,errorEvent){}
+
+
+
+    }]);
