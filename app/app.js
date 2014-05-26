@@ -79,13 +79,13 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
 
 //======================== AUTHENTICATION =================================
 var Authentication = angular.module('Authentication',['Rest'])
-    .controller('AuthenticationCtrl',[ '$scope', 'AuthenticationService',function ($scope,AuthenticationService) {
+    .controller('AuthenticationCtrl',[ '$rootScope','$scope', 'AuthenticationService',function ($rootScope,$scope,AuthenticationService) {
 
         $scope.$on('LOGIN_RESPONSE', function(event,data) {
 
             if(data.loginResponseType == 'LOGIN_SUCCESS')
             {
-                $scope.$emit(data.loginResponseType, data);
+                $rootScope.$broadcast(data.loginResponseType, data);
             }
             else
             {
@@ -118,7 +118,7 @@ var Authentication = angular.module('Authentication',['Rest'])
 
             if(data.signUpResponseType == 'SIGNUP_SUCCESS')
             {
-                $scope.$emit(data.signUpResponseType, data);
+                $rootScope.$broadcast(data.signUpResponseType, data);
             }
             else if(data.signUpResponseType == 'ALREADY_REGISTERED')
             {
