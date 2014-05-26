@@ -1,6 +1,6 @@
 //=============================== MAIN ===================================
 var xClient = angular.module('X-Client', ['ui.router', 'ngResource','GUI','authentication'])
-    .config(function($stateProvider, $urlRouterProvider) {
+    .config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise('/offline');
 
@@ -19,8 +19,8 @@ var xClient = angular.module('X-Client', ['ui.router', 'ngResource','GUI','authe
             templateUrl: 'app/partials/online.html'
 
         })
-})
-    .run(function($rootScope){
+}])
+    .run(['$rootScope',function($rootScope){
 
     $rootScope
         .$on('$stateChangeStart',
@@ -59,8 +59,8 @@ var xClient = angular.module('X-Client', ['ui.router', 'ngResource','GUI','authe
             console.log("View Load: the view is loaded, and DOM rendered!");
         });
 
-})
-    .controller('MainCtrl', function ($scope,$state, authenticationService) {
+}])
+    .controller('MainCtrl',[ '$scope','$state', 'authenticationService',function ($scope,$state,authenticationService) {
 
 
     $scope.service = authenticationService;
@@ -90,12 +90,12 @@ var xClient = angular.module('X-Client', ['ui.router', 'ngResource','GUI','authe
 
     };
 
-});
+}]);
 
 
 //======================== AUTHENTICATION ==================================
 var authentication = angular.module('authentication',[])
-    .service('authenticationService', function ($rootScope,$resource) {
+    .service('authenticationService',['$rootScope','$resource' ,function ($rootScope,$resource) {
 
     //properties
     var user = null;
@@ -151,13 +151,13 @@ var authentication = angular.module('authentication',[])
         return 'Register Failed';
     };
 
-});
+}]);
 
 
 
 //======================= GUI ==============================================
 var GUI = angular.module('GUI',[])
-.controller('UICtrl', function ($scope,$window) {
+    .controller('UICtrl',['$scope','$window', function ($scope,$window) {
 
     //===================== Window ==============================
 
@@ -331,4 +331,4 @@ var GUI = angular.module('GUI',[])
         $scope.closeRightSideBar();
     };
 
-});
+}]);
