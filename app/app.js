@@ -71,7 +71,7 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
             $scope.token = data.token;
         });
 
-        $scope.$on('SIGNUP_SUCCESS', function(event,data) {
+        $scope.$on('REGISTER_SUCCESS', function(event,data) {
 
             alert(data.email+' we have to do something now that you signed up...validate email or something :)');
         });
@@ -117,9 +117,9 @@ var Authentication = angular.module('Authentication',['Rest'])
         };
         $scope.$on('REGISTER_RESPONSE', function(event,data) {
 
-            if(data.signUpResponseType == 'SIGNUP_SUCCESS')
+            if(data.registerResponseType == 'REGISTER_SUCCESS')
             {
-                $rootScope.$broadcast(data.signUpResponseType, data);
+                $rootScope.$broadcast(data.registerResponseType, data);
             }
             else if(data.signUpResponseType == 'ALREADY_REGISTERED')
             {
