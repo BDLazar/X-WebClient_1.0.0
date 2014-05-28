@@ -68,6 +68,7 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
             angular.element( document.querySelector( '.modal-backdrop' )).remove();
             $state.transitionTo('online');
             $scope.user = data.email;
+            $scope.token = data.token;
         });
 
         $scope.$on('SIGNUP_SUCCESS', function(event,data) {
@@ -143,14 +144,14 @@ var Authentication = angular.module('Authentication',['Rest'])
 
             var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/login';
             var urlParams = {};
-            var headers = {};
-            var payload = {loginID:loginID, password:password};
-            RestService.post(url,urlParams,headers,payload,'LOGIN_RESPONSE','LOGIN_ERROR');
+            var headers = {loginID:loginID, password:password};
+            var isArray = false;
+            RestService.get(url,urlParams,headers,isArray,'LOGIN_RESPONSE','LOGIN_ERROR');
 
         };
         this.register = function (email, password) {
 
-            var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/signup';
+            var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/register';
             var urlParams = {};
             var headers = {};
             var payload = {email:email, password:password};
@@ -344,7 +345,35 @@ var GUI = angular.module('GUI',[])
 var Rest = angular.module('Rest',['ngResource'])
     .service('RestService',['$rootScope','$resource' ,function ($rootScope,$resource) {
 
-        this.get = function(url,urlParams,headers,isArray,successEvent,errorEvent){}
+        this.get = function(url,urlParams,headers,isArray,successEvent,errorEvent){
+
+            var resource = $resource(
+                url,
+                {},
+                {
+                    get:
+                    {
+                        method: 'GET',
+                        headers: headers,
+                        params : urlParams,
+                        isArray: isArray,
+                        interceptor:
+                        {
+                            response: function(response)
+                            {
+                                $rootScope.$broadcast(successEvent, response.data);
+                            },
+                            responseError: function(responseError)
+                            {
+                                $rootScope.$broadcast(errorEvent,responseError.status);
+                            }
+                        }
+                    }
+                }
+            );
+
+            resource.get();
+        }
         this.post = function(url,urlParams,headers,payload,successEvent,errorEvent){
 
             var resource = $resource(
