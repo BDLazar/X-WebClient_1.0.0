@@ -62,21 +62,17 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
 }])
     .controller('MainCtrl',[ '$scope','$state', 'AuthenticationService',function ($scope,$state,AuthenticationService) {
 
-
-
         $scope.$on('LOGIN_SUCCESS', function(event,data) {
             angular.element( document.querySelector( '.modal-backdrop' )).remove();
             $state.transitionTo('online');
-            $scope.user = data.email;
-            $scope.token = data.token;
+            $scope.user = AuthenticationService.user;
+            $scope.token = AuthenticationService.token;
         });
-
         $scope.$on('REGISTER_SUCCESS', function(event,data) {
 
             alert(data.email+' we have to do something now that you signed up...validate email or something :)');
         });
 }]);
-
 
 //======================== AUTHENTICATION =================================
 var Authentication = angular.module('Authentication',['Rest'])
@@ -86,7 +82,9 @@ var Authentication = angular.module('Authentication',['Rest'])
 
             if(data.loginResponseType == 'LOGIN_SUCCESS')
             {
-                $rootScope.$broadcast(data.loginResponseType, data);
+                AuthenticationService.user = data.email;
+                AuthenticationService.token = data.token;
+                $rootScope.$broadcast('LOGIN_SUCCESS', data);
             }
             else
             {
@@ -140,6 +138,8 @@ var Authentication = angular.module('Authentication',['Rest'])
     }])
     .service('AuthenticationService',['$rootScope','RestService',function ($rootScope,RestService) {
 
+        this.user = null;
+        this.token = null;
         this.login = function (loginID, password) {
 
             var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/login';
