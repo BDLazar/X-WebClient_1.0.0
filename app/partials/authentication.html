@@ -1,0 +1,104 @@
+<div id="authentication" class="modal-dialog modal-sm" data-ng-controller="AuthenticationCtrl">
+    <div class="modal-content">
+        <div class="modal-header">
+            <br>
+            <center>
+                BRND
+            </center>
+        </div>
+        <div class="modal-body">
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="login-content">
+                    <center>
+                        <label class="control-label">Login</label>
+                    </center>
+                    <br>
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <!-- Sign In Form -->
+                            <!-- Text input-->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <input id="login-id-input"  type="text" class="form-control" placeholder="ID" class="input-medium" data-ng-model="login.id">
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Password input-->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <input id="password-input" class="form-control" type="password" placeholder="Password" class="input-medium" data-ng-model="login.password">
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <!-- Buttons -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <center>
+                                        <button id="login-btn" class="btn btn-sm btn-success" data-ng-click="login(login.id,login.password)">Log In</button>
+                                        <span> -or-</span>
+                                        <button href="#register-content" data-toggle="tab" class="btn btn-sm btn-primary">Register</button>
+                                    </center>
+                                </div>
+                            </div>
+                            <br>
+                            <center>
+                                <label class="control-label">{{loginMessage}}</label>
+                            </center>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="register-content">
+                    <center>
+                        <label class="control-label center">Register</label>
+                    </center>
+                    <br>
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <!-- Sign Up Form -->
+                            <!-- Text input-->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <input id="register-email-input"  class="form-control" type="text" placeholder="Email" class="input-large"  data-ng-model="register.email">
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Password input-->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <input id="register-password" name="password" class="form-control" type="password" placeholder="Password" class="input-large" data-ng-model="register.password">
+                                </div>
+                            </div>
+                            <br>
+
+                            <!-- Text input-->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <input id="register-confirm-password" class="form-control" type="password" placeholder="Confirm Password" class="input-large" data-ng-model="register.confirmPassword">
+                                </div>
+                            </div>
+                            <br><br>
+                            <!-- Buttons -->
+                            <div class="control-group">
+                                <div class="controls" class="center">
+                                    <center>
+                                        <button id="register-btn" class="btn btn-sm btn-success" data-ng-click="register(register.email,register.password,register.confirmPassword)">Register</button>
+                                        -or-
+                                        <button href="#login-content" data-toggle="tab" class="btn btn-sm btn-primary">Login</button>
+                                    </center>
+                                </div>
+                            </div>
+                            <br>
+                            <center>
+                                <label class="control-label">{{registerMessage}}</label>
+                            </center>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer"></div>
+    </div>
+</div>
