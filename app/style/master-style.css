@@ -132,10 +132,10 @@
     z-index: 10000;
     transition: all .4s ease 0s;
 }
-#page-wrapper .left-sb-active {
+#page-wrapper.left-sb-active {
     padding-left: 260px;
 }
-#page-wrapper .left-sb-active #left-side-bar {
+#page-wrapper.left-sb-active #left-side-bar {
     left: 0px;
 }
 
@@ -149,10 +149,10 @@
     z-index: 10000;
     transition: all .4s ease 0s;
 }
-#page-wrapper .right-sb-active {
+#page-wrapper.right-sb-active {
     padding-right: 260px;
 }
-#page-wrapper .right-sb-active #right-side-bar {
+#page-wrapper.right-sb-active #right-side-bar {
     right: 0px;
 }
 
