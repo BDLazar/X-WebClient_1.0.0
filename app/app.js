@@ -27,13 +27,27 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
 
         })
 }])
-    .run(['$rootScope',function($rootScope){
+    .run(['$rootScope','$state','AuthenticationService',function($rootScope,$state,AuthenticationService){
 
     $rootScope
         .$on('$stateChangeStart',
         function(event, toState, toParams, fromState, fromParams){
 
             console.log("State Change: transition begins!");
+
+            var isUserOnline = AuthenticationService.validateUser();
+            if(toState.name == 'online' && isUserOnline == false )
+            {
+                event.preventDefault();
+                $state.transitionTo('authentication');
+            }
+
+            if((toState.name == 'offline' || toState.name == 'authentication') && isUserOnline == true)
+            {
+                event.preventDefault();
+                $state.transitionTo('online');
+            }
+
         });
 
     $rootScope
@@ -71,17 +85,17 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
 
         $scope.$on('LOGIN_SUCCESS', function(event,data) {
             $state.transitionTo('online');
-            $scope.user = AuthenticationService.user;
-            $scope.token = AuthenticationService.token;
         });
         $scope.$on('REGISTER_SUCCESS', function(event,data) {
 
             alert(data.email+' we have to do something now that you signed up...validate email or something :)');
         });
+        $scope.user = AuthenticationService.getUser().email;
+        $scope.token = AuthenticationService.getUser().token;
 }]);
 
 //======================== AUTHENTICATION =================================
-var Authentication = angular.module('Authentication',['Rest'])
+var Authentication = angular.module('Authentication',['Rest','ngCookies'])
     .controller('AuthenticationCtrl',[ '$rootScope','$scope', 'AuthenticationService',function ($rootScope,$scope,AuthenticationService) {
 
         var validateLoginForm = function(loginID,password){
@@ -126,8 +140,8 @@ var Authentication = angular.module('Authentication',['Rest'])
 
             if(data.loginResponseType == 'LOGIN_SUCCESS')
             {
-                AuthenticationService.user = data.email;
-                AuthenticationService.token = data.token;
+                AuthenticationService.setUser(data.email,data.token);
+
                 $rootScope.$broadcast('LOGIN_SUCCESS', data);
             }
             else if(data.loginResponseType == 'LOGIN_FAILED')
@@ -223,12 +237,23 @@ var Authentication = angular.module('Authentication',['Rest'])
 
         });
 
-    }])
-    .service('AuthenticationService',['$rootScope','RestService',function ($rootScope,RestService) {
+        $scope.logout = function(){
+            AuthenticationService.logout();
+            $rootScope.$broadcast('LOGOUT_SUCCESS');
+        };
 
-        this.user = null;
-        this.token = null;
-        this.login = function (loginID, password) {
+    }])
+    .service('AuthenticationService',['$rootScope','$cookieStore','RestService',function ($rootScope,$cookieStore,RestService) {
+
+        this.setUser = function(email,token){
+            $cookieStore.put('token',token);
+            $cookieStore.put('user',email);
+        };
+        this.getUser = function(){
+
+            return {token: $cookieStore.get('token'), email: $cookieStore.get('user')};
+        };
+        this.login = function(loginID, password) {
 
             var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/login';
             var urlParams = {};
@@ -237,9 +262,7 @@ var Authentication = angular.module('Authentication',['Rest'])
             RestService.get(url,urlParams,headers,isArray,'LOGIN_RESPONSE','LOGIN_ERROR');
 
         };
-
-
-        this.register = function (email, password) {
+        this.register = function(email, password) {
 
             var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/register';
             var urlParams = {};
@@ -248,7 +271,19 @@ var Authentication = angular.module('Authentication',['Rest'])
             RestService.post(url,urlParams,headers,payload,'REGISTER_RESPONSE','REGISTER_ERROR');
 
         };
+        this.logout = function(){
+            $cookieStore.remove('token');
+            $cookieStore.remove('user');
+        };
+        this.validateUser = function(){
 
+            var user = this.getUser();
+            if(user.token != null && user.email != null)
+            {
+                return true;
+            }
+            return false;
+        };
 
     }]);
 
