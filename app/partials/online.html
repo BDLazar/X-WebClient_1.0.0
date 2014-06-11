@@ -5,11 +5,11 @@
 
     <!-- Right Sidebar -->
     <div id="right-side-bar" ui-view="right-side-bar-view">
-
+        <a id="right-side-bar-logout-btn" type="submit" class="btn btn-default btn-sm" data-ng-controller="AuthenticationCtrl" data-ng-click="logout()">Logout</a>
     </div>
 
     <!--Center content -->
-    <div class="center-content">
+    <div id="center-content">
         <!--Topbar-->
         <nav id="top-bar" class="navbar navbar-default container-fluid" role="navigation">
             <a id="left-sidebar-toggle" class="navbar-btn" data-toggle="offcanvas" data-ng-click="toggleLeftSideBar()" role="button">
@@ -21,9 +21,8 @@
             <a id="logo" class="navbar-brand" href="#">BRND</a>
             <a id="right-sidebar-toggle" class="navbar-btn" data-toggle="offcanvas" data-ng-click="toggleRightSideBar()" role="button">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+                <span class="glyphicon glyphicon-user"></span>
+
             </a>
             <ul id="top-bar-nav-right">
                 <li>
@@ -39,10 +38,4 @@
                 </form>
             </div>
         </nav>
-        User: {{user}} <br>
-        Token: {{token}}
-
     </div>
-
-
-

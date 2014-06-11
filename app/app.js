@@ -1,102 +1,174 @@
 //=============================== MAIN ===================================
 var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
-    .config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
+    .config(['$stateProvider', '$urlRouterProvider',
+        function($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.otherwise('/offline');
+        $urlRouterProvider.otherwise('/offline');
 
-    $stateProvider
+        $stateProvider
 
-        .state('offline', {
+            .state('offline', {
 
-            url: '/offline',
-            templateUrl: 'app/partials/offline.html'
+                url: '/offline',
+                templateUrl: 'app/partials/offline.html',
+                resolve:
+                {
+                    checkUserSession : function ($q,AuthenticationService)
+                    {
+                        var defer = $q.defer();
+                        if(AuthenticationService.isUserSessionAlive() == false)
+                        {
+                            defer.resolve();
+                        }
+                        else
+                        {
+                            defer.reject();
+                        }
 
-        })
+                        return defer.promise;
+                    }
+                }
+            })
 
-        .state('authentication', {
+            .state('authentication', {
 
-            url: '/authentication',
-            templateUrl: 'app/partials/authentication.html'
+                url: '/authentication',
+                templateUrl: 'app/partials/authentication.html',
+                resolve:
+                {
+                    checkUserSession : function ($q,AuthenticationService)
+                    {
+                        var defer = $q.defer();
+                        if(AuthenticationService.isUserSessionAlive() == false)
+                        {
+                            defer.resolve();
+                        }
+                        else
+                        {
+                            defer.reject();
+                        }
 
-        })
+                        return defer.promise;
+                    }
+                }
+            })
 
-        .state('online', {
+            .state('online', {
 
-            url: '/online',
-            templateUrl: 'app/partials/online.html'
+                url: '/online',
+                templateUrl: 'app/partials/online.html',
+                resolve:
+                {
+                    checkUserSession : function ($q, $timeout,AuthenticationService)
+                    {
+                        var defer = $q.defer();
+                        if(AuthenticationService.isUserSessionAlive() == false)
+                        {
+                            defer.reject();
+                        }
+                        else
+                        {
+                            AuthenticationService.validateUserSession();
 
-        })
-}])
-    .run(['$rootScope','$state','AuthenticationService',function($rootScope,$state,AuthenticationService){
+                            $timeout(function () {
 
-    $rootScope
-        .$on('$stateChangeStart',
-        function(event, toState, toParams, fromState, fromParams){
+                                if(AuthenticationService.isUserSessionAlive() == true)
+                                {
+                                    defer.resolve();
+                                }
+                                else
+                                {
+                                    alert('Validate User Session Timeout!');
+                                    defer.reject();
+                                }
 
-            console.log("State Change: transition begins!");
+                            }, 2000);
+                        }
 
-            var isUserOnline = AuthenticationService.validateUser();
-            if(toState.name == 'online' && isUserOnline == false )
-            {
-                event.preventDefault();
-                $state.transitionTo('authentication');
-            }
+                        return defer.promise;
+                    }
+                }
+            })
 
-            if((toState.name == 'offline' || toState.name == 'authentication') && isUserOnline == true)
-            {
-                event.preventDefault();
-                $state.transitionTo('online');
-            }
+    }])
+    .run(['$rootScope','$state',
+        function($rootScope,$state){
 
-        });
+        $rootScope
+            .$on('$stateChangeStart',
+            function(event, toState, toParams, fromState, fromParams){
+                console.log("State Change: transition begins :" + ' from '+ fromState.name + ' to '+ toState.name);
 
-    $rootScope
-        .$on('$stateChangeSuccess',
-        function(event, toState, toParams, fromState, fromParams){
-            console.log("State Change: State change success!");
-        });
+            });
 
-    $rootScope
-        .$on('$stateChangeError',
-        function(event, toState, toParams, fromState, fromParams){
-            console.log("State Change: Error!");
-        });
+        $rootScope
+            .$on('$stateChangeSuccess',
+            function(event, toState, toParams, fromState, fromParams){
+                console.log("State Change: State change success :"+' from '+ fromState.name + ' to '+ toState.name);
+            });
 
-    $rootScope
-        .$on('$stateNotFound',
-        function(event, toState, toParams, fromState, fromParams){
-            console.log("State Change: State not found!");
-        });
+        $rootScope
+            .$on('$stateChangeError',
+            function(event, toState, toParams, fromState, fromParams){
 
-    $rootScope
-        .$on('$viewContentLoading',
-        function(event, viewConfig){
-            console.log("View Load: the view is loading, and DOM rendering!");
-        });
+                console.log("State Change: Error :"+' from '+ fromState.name + ' to '+ toState.name);
 
-    $rootScope
-        .$on('$viewContentLoaded',
-        function(event, viewConfig){
-            console.log("View Load: the view is loaded, and DOM rendered!");
-        });
+                if(toState.name == 'online')
+                {
+                    $state.transitionTo('authentication');
+                }
 
-}])
-    .controller('MainCtrl',[ '$scope','$state', 'AuthenticationService',function ($scope,$state,AuthenticationService) {
+                if(toState.name == 'offline' || toState.name == 'authentication')
+                {
+                    event.preventDefault;
+                    if(fromState.name == null || fromState.name=='')
+                    {
+                        $state.transitionTo('online');
+                    }
+
+                }
+
+            });
+
+        $rootScope
+            .$on('$stateNotFound',
+            function(event, toState, toParams, fromState, fromParams){
+                console.log("State Change: State not found :"+' from '+ fromState.name + ' to '+ toState.name);
+            });
+
+        $rootScope
+            .$on('$viewContentLoading',
+            function(event, viewConfig){
+                console.log("View Load: the view is loading, and DOM rendering!");
+            });
+
+        $rootScope
+            .$on('$viewContentLoaded',
+            function(event, viewConfig){
+                console.log("View Load: the view is loaded, and DOM rendered!");
+            });
+
+    }])
+    .controller('MainCtrl',[ '$scope','$state', 'AuthenticationService',
+        function ($scope,$state,AuthenticationService) {
 
         $scope.$on('LOGIN_SUCCESS', function(event,data) {
             $state.transitionTo('online');
+        });
+        $scope.$on('LOGOUT_SUCCESS', function(event,data) {
+            $state.transitionTo('offline');
         });
         $scope.$on('REGISTER_SUCCESS', function(event,data) {
 
             alert(data.email+' we have to do something now that you signed up...validate email or something :)');
         });
-        $scope.user = AuthenticationService.getUser().email;
-        $scope.token = AuthenticationService.getUser().token;
-}]);
+    }]);
+
 
 //======================== AUTHENTICATION =================================
 var Authentication = angular.module('Authentication',['Rest','ngCookies'])
-    .controller('AuthenticationCtrl',[ '$rootScope','$scope', 'AuthenticationService',function ($rootScope,$scope,AuthenticationService) {
+    .controller('AuthenticationCtrl',[ '$rootScope','$scope', 'AuthenticationService',
+        function ($rootScope,$scope,AuthenticationService) {
 
         var validateLoginForm = function(loginID,password){
 
@@ -140,7 +212,7 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
 
             if(data.loginResponseType == 'LOGIN_SUCCESS')
             {
-                AuthenticationService.setUser(data.email,data.token);
+                AuthenticationService.createUserSession(data.loginID, data.token);
 
                 $rootScope.$broadcast('LOGIN_SUCCESS', data);
             }
@@ -238,21 +310,37 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
         });
 
         $scope.logout = function(){
-            AuthenticationService.logout();
+            AuthenticationService.killUserSession();
             $rootScope.$broadcast('LOGOUT_SUCCESS');
         };
 
     }])
-    .service('AuthenticationService',['$rootScope','$cookieStore','RestService',function ($rootScope,$cookieStore,RestService) {
+    .service('AuthenticationService',['$rootScope','$cookieStore','RestService',
+        function ($rootScope,$cookieStore,RestService) {
 
-        this.setUser = function(email,token){
+        this.createUserSession = function(loginID,token){
             $cookieStore.put('token',token);
-            $cookieStore.put('user',email);
-        };
-        this.getUser = function(){
+            $cookieStore.put('loginID',loginID);
 
-            return {token: $cookieStore.get('token'), email: $cookieStore.get('user')};
         };
+        this.getUserSession = function(){
+
+            return {token: $cookieStore.get('token'), loginID: $cookieStore.get('loginID') };
+        };
+        this.killUserSession = function(){
+            $cookieStore.remove('token');
+            $cookieStore.remove('loginID');
+        };
+        this.isUserSessionAlive = function(){
+            var userSession = this.getUserSession();
+            if( userSession.loginID != null && userSession.token != null )
+            {
+                return true;
+            }
+
+            return false;
+        };
+
         this.login = function(loginID, password) {
 
             var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/login';
@@ -271,26 +359,22 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
             RestService.post(url,urlParams,headers,payload,'REGISTER_RESPONSE','REGISTER_ERROR');
 
         };
-        this.logout = function(){
-            $cookieStore.remove('token');
-            $cookieStore.remove('user');
-        };
-        this.validateUser = function(){
+        this.validateUserSession = function(){
 
-            var user = this.getUser();
-            if(user.token != null && user.email != null)
-            {
-                return true;
-            }
-            return false;
+            var userSession = this.getUserSession();
+            var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/validate-user-session';
+            var urlParams = {};
+            var headers = { loginID: userSession.loginID, token: userSession.token };
+            var isArray = false;
+            RestService.get(url,urlParams,headers,isArray,'VALIDATE_USER_SESSION_RESPONSE','VALIDATE_USER_SESSION__ERROR');
         };
-
     }]);
 
 
 //======================= REST ===========================================
 var Rest = angular.module('Rest',['ngResource'])
-    .service('RestService',['$rootScope','$resource' ,function ($rootScope,$resource) {
+    .service('RestService',['$rootScope','$resource' ,
+        function ($rootScope,$resource) {
 
         this.get = function(url,urlParams,headers,isArray,successEvent,errorEvent){
 
@@ -356,7 +440,8 @@ var Rest = angular.module('Rest',['ngResource'])
 
 //======================= GUI =============================================
 var GUI = angular.module('GUI',[])
-    .controller('UICtrl',['$scope','$state','$window', function ($scope,$state,$window) {
+    .controller('UICtrl',['$scope','$state','$window',
+        function ($scope,$state,$window) {
 
         //===================== Window ==============================
 

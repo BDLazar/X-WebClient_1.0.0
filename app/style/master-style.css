@@ -42,10 +42,10 @@
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
-    background: #999999;
+    background: #333333;
 }
 #top-bar #left-sidebar-toggle:hover .icon-bar {
-    background: #333333 !important;
+    background: #666666 !important;
 }
 #top-bar #left-sidebar-toggle .icon-bar + .icon-bar {
     margin-top: 4px;
@@ -53,13 +53,16 @@
 
 /*Logo*/
 #top-bar #logo{
-    float:left;}
+    float:left;
+    color: #333333 ;
+}
 
 /*Right Side Bar Toggle */
 #top-bar #right-sidebar-toggle {
 
     float: right;
-    padding: 9px 5px;
+    padding: 8px 0px;
+    color: #333333;
     margin: 6px 14px;
     margin-right: 0px;
     background-color: transparent;
@@ -69,24 +72,11 @@
     -moz-border-radius: 0 !important;
     border-radius: 0 !important;
 }
-#top-bar #right-sidebar-toggle .icon-bar {
-    display: block;
-    width: 22px;
-    height: 2px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    background: #999999;
-}
-#top-bar #right-sidebar-toggle:hover .icon-bar {
-    background: #333333 !important;
-
-}
-#top-bar #right-sidebar-toggle .icon-bar + .icon-bar {
-    margin-top: 4px;
+#top-bar #right-sidebar-toggle:hover{
+    color: #666666;
 }
 
-/**/
+/*Top Bar Search toggle*/
 #top-bar ul#top-bar-nav-right{
     float: right;
     height: inherit;
@@ -100,11 +90,11 @@
 }
 #top-bar #top-bar-nav-right #top-bar-search-toggle{
     padding: 8px 0px;
-    color: #999999;
+    color: #333333;
 }
 #top-bar #top-bar-nav-right #top-bar-search-toggle:hover{
     padding: 8px 0px;
-    color: #333333;
+    color: #666666;
 }
 #top-bar #top-bar-nav-right #top-bar-search-toggle .glyphicon{
     padding: 12px 0px;
