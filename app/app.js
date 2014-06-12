@@ -440,13 +440,13 @@ var Rest = angular.module('Rest',['ngResource'])
 
 //======================= GUI =============================================
 var GUI = angular.module('GUI',[])
-    .controller('UICtrl',['$scope','$state','$window',
+    .controller('GUICtrl',['$scope','$state','$window',
         function ($scope,$state,$window) {
 
         //===================== Window ==============================
 
         $scope.$on('$viewContentLoaded', function(){
-            $scope.handleTopBar();
+           $scope.handleTopBar();
         });
         $window.onresize = function(){
             $scope.$apply();
@@ -484,80 +484,24 @@ var GUI = angular.module('GUI',[])
         };
 
         //===================== Top Bar =============================
-        $scope.getTopBarWidth = function(){
-            return angular.element( document.querySelector( '#top-bar' ) ).width();
-        };
-        $scope.$watch($scope.getTopBarWidth, function(newWidth){
-            $scope.top_bar_width = newWidth;
-        });
-        angular.element( document.querySelector( '#top-bar' ) ).onresize = function(){
-            $scope.$apply();
-            handleTopBar();
-        };
-        $scope.isTopBarTooSmall = function(){
 
-            if(angular.element( document.querySelector( '#top-bar' )).width() < 324)
-            {
-                return true;
-            }
-
-            return false;
-        };
         $scope.handleTopBar = function() {
 
             //we are on a mobile screen
             if($scope.getDevice() == 'mobile')
             {
-                if((!$scope.isLeftSideBarActive() && !$scope.isRightSideBarActive()) || !$scope.isTopBarTooSmall())
-                {
-                    angular.element( document.querySelector("#logo") ).show();
-                    angular.element( document.querySelector("#left-sidebar-toggle") ).show();
-                    angular.element( document.querySelector("#right-sidebar-toggle") ).show();
-                    angular.element( document.querySelector("#top-bar-nav-right") ).show();
-                    angular.element( document.querySelector("#top-bar-search-toggle") ).show();
-                    setTimeout(function ()
-                    {
-                        angular.element( document.querySelector( '#top-bar' ) ).attr("style", "overflow:visible !important");
-
-                    }, 400);
-                }
-                else if($scope.isRightSideBarActive())
-                {
-                    angular.element( document.querySelector("#logo") ).hide();
-                    angular.element( document.querySelector("#left-sidebar-toggle") ).hide();
-                    angular.element( document.querySelector("#top-bar-search-toggle") ).hide();
-                    angular.element( document.querySelector("#top-bar-nav-right") ).hide();
-                    angular.element( document.querySelector( '#top-bar' ) ).attr("style", "overflow:hidden !important");
-                }
-                else if($scope.isLeftSideBarActive())
-                {
-                    angular.element( document.querySelector("#logo") ).hide();
-                    angular.element( document.querySelector("#right-sidebar-toggle") ).hide();
-                    angular.element( document.querySelector("#top-bar-search-toggle") ).hide();
-                    angular.element( document.querySelector("#top-bar-nav-right") ).hide();
-                    angular.element( document.querySelector( '#top-bar' ) ).attr("style", "overflow:hidden !important");
-                }
-
+                angular.element( document.querySelector( "#top-bar-search-toggle")).show();
             }
             //we are on a tablet screen
             else if($scope.getDevice() == 'tablet')
             {
-                angular.element( document.querySelector( '#logo' ) ).show();
-                angular.element( document.querySelector( "#left-sidebar-toggle")).show();
-                angular.element( document.querySelector( "#right-sidebar-toggle")).show();
                 angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
-                angular.element( document.querySelector( '#top-bar' ) ).attr("style", "overflow:visible !important");
             }
             //we are on a desktop or large device screen
             else if($scope.getDevice() == 'desktop' || $scope.getDevice()== 'large')
             {
-                angular.element( document.querySelector( '#logo' ) ).show();
-                angular.element( document.querySelector( "#left-sidebar-toggle")).show();
-                angular.element( document.querySelector( "#right-sidebar-toggle")).show();
                 angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
-                angular.element( document.querySelector( '#top-bar' ) ).attr("style", "overflow:visible !important");
             }
-
 
         };
 
@@ -567,7 +511,7 @@ var GUI = angular.module('GUI',[])
             {
                 $scope.closeRightSideBar();
             }
-            angular.element( document.querySelector( '#page-wrapper' ) ).toggleClass("left-sb-active");
+            angular.element( document.querySelector( '#GUI-middle' ) ).toggleClass("left-sb-active");
             $scope.handleTopBar();
         };
         $scope.toggleRightSideBar = function(){
@@ -576,12 +520,12 @@ var GUI = angular.module('GUI',[])
             {
                 $scope.closeLeftSideBar();
             }
-            angular.element( document.querySelector( '#page-wrapper' ) ).toggleClass("right-sb-active");
+            angular.element( document.querySelector( '#GUI-middle' ) ).toggleClass("right-sb-active");
             $scope.handleTopBar();
 
         };
         $scope.isLeftSideBarActive = function(){
-            if(angular.element( document.querySelector( "#page-wrapper")).hasClass("left-sb-active"))
+            if(angular.element( document.querySelector( "#GUI-middle")).hasClass("left-sb-active"))
             {
                 return true;
             }
@@ -589,7 +533,7 @@ var GUI = angular.module('GUI',[])
             return false;
         };
         $scope.isRightSideBarActive = function(){
-            if(angular.element( document.querySelector( "#page-wrapper")).hasClass("right-sb-active"))
+            if(angular.element( document.querySelector( "#GUI-middle")).hasClass("right-sb-active"))
             {
                 return true;
             }
@@ -597,16 +541,21 @@ var GUI = angular.module('GUI',[])
             return false;
         };
         $scope.openLeftSideBar = function(){
-            angular.element( document.querySelector( "#page-wrapper")).addClass("left-sb-active")
+            angular.element( document.querySelector( "#GUI-middle")).addClass("left-sb-active")
         };
         $scope.openRightSideBar = function(){
-            angular.element( document.querySelector( "#page-wrapper")).addClass("right-sb-active")
+            angular.element( document.querySelector( "#GUI-middle")).addClass("right-sb-active")
         };
         $scope.closeLeftSideBar = function(){
-            angular.element( document.querySelector( "#page-wrapper")).removeClass("left-sb-active")
+            angular.element( document.querySelector( "#GUI-middle")).removeClass("left-sb-active")
         };
         $scope.closeRightSideBar = function(){
-            angular.element( document.querySelector( "#page-wrapper")).removeClass("right-sb-active")
+            angular.element( document.querySelector( "#GUI-middle")).removeClass("right-sb-active")
+        };
+
+        //====================== Bottom Bar ==========================
+        $scope.toggleBottomBar = function(){
+            angular.element( document.querySelector( '#bottom-bar' ) ).toggleClass("bottom-bar-active");
         };
 
         //===================== Authentication =======================

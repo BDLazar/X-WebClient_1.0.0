@@ -1,37 +1,21 @@
-    <!-- Left Sidebar -->
-    <div id="left-side-bar" ui-view="left-side-bar-view">
-
-    </div>
-
-    <!-- Right Sidebar -->
-    <div id="right-side-bar" ui-view="right-side-bar-view">
-        <a id="right-side-bar-logout-btn" type="submit" class="btn btn-default btn-sm" data-ng-controller="AuthenticationCtrl" data-ng-click="logout()">Logout</a>
-    </div>
-
-    <!--Center content -->
-    <div id="center-content">
-        <!--Topbar-->
-        <nav id="top-bar" class="navbar navbar-default container-fluid" role="navigation">
+<div id="GUI-top">
+        <!--Top bar-->
+        <nav id="top-bar" class="navbar navbar-fixed-top navbar-default container-fluid" role="navigation">
             <a id="left-sidebar-toggle" class="navbar-btn" data-toggle="offcanvas" data-ng-click="toggleLeftSideBar()" role="button">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+                <span class="glyphicon glyphicon-globe"></span>
             </a>
             <a id="logo" class="navbar-brand" href="#">BRND</a>
             <a id="right-sidebar-toggle" class="navbar-btn" data-toggle="offcanvas" data-ng-click="toggleRightSideBar()" role="button">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="glyphicon glyphicon-user"></span>
-
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </a>
-            <ul id="top-bar-nav-right">
-                <li>
-                    <a id="top-bar-search-toggle" type="button" data-toggle="collapse" data-target="#top-bar-search-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="glyphicon glyphicon-search"></span>
-                    </a>
-                </li>
-            </ul>
+            <a id="top-bar-search-toggle" type="button" data-toggle="collapse" data-target="#top-bar-search-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-search"></span>
+            </a>
             <div id="top-bar-search-collapse" class="collapse navbar-collapse navbar-left">
                 <form id="top-bar-search-form" class="navbar-form" role="search">
                     <input id="search-input" type="text" class="form-control input-sm" placeholder="Search">
@@ -39,3 +23,26 @@
             </div>
         </nav>
     </div>
+<div id="GUI-middle">
+        <!-- Left Sidebar -->
+        <div id="left-side-bar">
+
+        </div>
+
+        <!-- Right Sidebar -->
+        <div id="right-side-bar">
+            <a id="right-side-bar-logout-btn" type="submit" class="btn btn-default btn-sm" data-ng-controller="AuthenticationCtrl" data-ng-click="logout()">Logout</a>
+        </div>
+
+        <!--Center content -->
+        <div id="center-content">
+
+        </div>
+    </div>
+<div id="GUI-bottom">
+        <nav id="bottom-bar" class="navbar-fixed-bottom navbar-default container-fluid" role="navigation" data-ng-click="toggleBottomBar()">
+
+        </nav>
+    </div>
+
+

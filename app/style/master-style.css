@@ -1,157 +1,163 @@
-/*==================================================PAGE=======================================================================*/
-/*Holds all page elements*/
-#page-wrapper {
-    transition: all .4s ease 0s;
-    height: 100%;
+#GUI {
 }
+/*===============TOP==============*/
+#GUI-top{
 
-/*Holds everything except the sidebars*/
-#center-content {
-    padding-left: 0;
-    margin-left: 0;
-    width: 100%;
 }
-
-
-/*===================================================TOP BAR===================================================================*/
-/*Top Navigation Bar*/
 #top-bar{
     height: 50px !important;
     display: block !important;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
+    padding:0;
 }
-
-/*Left Side Bar Toggle */
 #top-bar #left-sidebar-toggle {
     float: left;
-    padding: 9px 5px;
-    margin: 6px 5px;
-    margin-left: 0px;
-    background-color: transparent;
-    background-image: none;
-    border: 1px solid transparent;
-    -webkit-border-radius: 0 !important;
-    -moz-border-radius: 0 !important;
-    border-radius: 0 !important;
+    height:100%;
+    width: 50px;
+    padding: 0px;
+    margin: 0px;
+    color: #333333;
 }
-#top-bar #left-sidebar-toggle .icon-bar {
-    display: block;
-    width: 22px;
-    height: 2px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    background: #333333;
+#top-bar #left-sidebar-toggle:hover  {
+    background: #eeeeee !important;
 }
-#top-bar #left-sidebar-toggle:hover .icon-bar {
-    background: #666666 !important;
-}
-#top-bar #left-sidebar-toggle .icon-bar + .icon-bar {
-    margin-top: 4px;
+#top-bar #left-sidebar-toggle .glyphicon {
+
+    margin-left:19px;
+    margin-top: 16px;
 }
 
-/*Logo*/
 #top-bar #logo{
     float:left;
     color: #333333 ;
 }
 
-/*Right Side Bar Toggle */
 #top-bar #right-sidebar-toggle {
 
     float: right;
-    padding: 8px 0px;
-    color: #333333;
-    margin: 6px 14px;
-    margin-right: 0px;
-    background-color: transparent;
-    background-image: none;
-    border: 1px solid transparent;
-    -webkit-border-radius: 0 !important;
-    -moz-border-radius: 0 !important;
-    border-radius: 0 !important;
-}
-#top-bar #right-sidebar-toggle:hover{
-    color: #666666;
-}
-
-/*Top Bar Search toggle*/
-#top-bar ul#top-bar-nav-right{
-    float: right;
-    height: inherit;
+    height:100%;
+    width: 50px;
     padding: 0px;
-    margin: 3px 0px;
+    margin: 0px;
 }
-#top-bar #top-bar-nav-right li{
-    list-style-type: none;
-    display: inline;
-    margin: 0px 0px 0px 20px;
+#top-bar #right-sidebar-toggle:hover  {
+    background: #eeeeee !important;
 }
-#top-bar #top-bar-nav-right #top-bar-search-toggle{
-    padding: 8px 0px;
+#top-bar #right-sidebar-toggle .icon-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #333333;
+    margin-left:14px;
+    margin-top: 17px;
+}
+#top-bar #right-sidebar-toggle .icon-bar + .icon-bar {
+    margin-top: 4px;
+}
+
+#top-bar #top-bar-search-toggle{
+    float: right;
+    height:100%;
+    width: 50px;
+    padding: 0px;
+    margin: 0px;
     color: #333333;
 }
-#top-bar #top-bar-nav-right #top-bar-search-toggle:hover{
-    padding: 8px 0px;
-    color: #666666;
+#top-bar #top-bar-search-toggle:hover{
+    background: #eeeeee !important;
 }
-#top-bar #top-bar-nav-right #top-bar-search-toggle .glyphicon{
-    padding: 12px 0px;
-
+#top-bar #top-bar-search-toggle .glyphicon{
+    margin-left:19px;
+    margin-top: 16px;
 }
-
-/*Search input in top navigation bar*/
 #top-bar-search-collapse{
-    border-top: none;
-    margin-top: 0px;
+
 }
 #top-bar-search-collapse #top-bar-search-form{
-    border-top: none ;
+
 }
 
-/*====================================================SIDE BARS================================================================*/
+#top-bar-login-btn{
+    float:right;
+    height: 100%;
+    color: #333333;
+    padding:13px;
+    cursor:context-menu;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
-/*Left Navigation Bar*/
+}
+#top-bar-login-btn:hover{
+
+    background: #eeeeee !important;
+    text-decoration: none;
+}
+
+/*===============MIDDLE===========*/
+
+#GUI-middle {
+
+    width: 100%;
+    height: 100%;
+    padding-top: 50px;
+    transition: all .6s ease 0s;
+}
 #left-side-bar {
     left: -260px;
     width: 260px;
     background: #222;
     position: fixed;
     height: 100%;
-    z-index: 10000;
-    transition: all .4s ease 0s;
+    transition: all 0.6s ease 0s;
 }
-#page-wrapper.left-sb-active {
+#GUI-middle.left-sb-active {
     padding-left: 260px;
 }
-#page-wrapper.left-sb-active #left-side-bar {
+#GUI-middle.left-sb-active #left-side-bar {
     left: 0px;
 }
-
-/*Right Navigation Bar*/
 #right-side-bar {
     right: -260px;
     width: 260px;
     background: #222;
     position: fixed;
     height: 100%;
-    z-index: 10000;
-    transition: all .4s ease 0s;
+    transition: all .6s ease 0s;
 }
-#page-wrapper.right-sb-active {
+#GUI-middle.right-sb-active {
     padding-right: 260px;
 }
-#page-wrapper.right-sb-active #right-side-bar {
+#GUI-middle.right-sb-active #right-side-bar {
     right: 0px;
 }
-
-
-/*=====================================================LOGIN=================================================================*/
-
-#top-bar-login-btn{
-    margin: 8px 0px;
+#center-content {
+    padding-left: 0;
+    margin-left: 0;
+    width: 100%;
 }
+
+/*===============BOTTOM============*/
+#GUI-bottom{
+
+}
+#bottom-bar{
+    bottom: -280px;
+    min-height: 300px;
+    border-top: 1px solid #e7e7e7;
+    transition: all 0.6s ease 0s;
+}
+#bottom-bar.bottom-bar-active{
+    bottom: 0px;
+}
+
+
+
+
+
+/*=====================================================LOGIN PAGE=================================================================*/
+
+
 #authentication{
 
 }
