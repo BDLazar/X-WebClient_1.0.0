@@ -1,5 +1,5 @@
 //=============================== MAIN ===================================
-var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
+var XClient = angular.module('X-Client', ['ui.router','Authentication','Search'])
     .config(['$stateProvider', '$urlRouterProvider',
         function($stateProvider, $urlRouterProvider) {
 
@@ -30,27 +30,10 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
                 }
             })
 
-            .state('authentication', {
+            .state('authentication',{
 
-                url: '/authentication',
-                templateUrl: 'app/partials/authentication.html',
-                resolve:
-                {
-                    checkUserSession : function ($q,AuthenticationService)
-                    {
-                        var defer = $q.defer();
-                        if(AuthenticationService.isUserSessionAlive() == false)
-                        {
-                            defer.resolve();
-                        }
-                        else
-                        {
-                            defer.reject();
-                        }
-
-                        return defer.promise;
-                    }
-                }
+                url:'/authentication',
+                templateUrl:'app/partials/authentication.html'
             })
 
             .state('online', {
@@ -90,6 +73,20 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
                 }
             })
 
+            .state('online.userProfile',{
+
+                url:'/userProfile',
+                templateUrl:'app/partials/online/userProfile.html'
+
+            })
+
+            .state('online.newsFeed',{
+
+                url:'/newsFeed',
+                templateUrl:'app/partials/online/newsFeed.html'
+
+            })
+
     }])
     .run(['$rootScope','$state',
         function($rootScope,$state){
@@ -118,14 +115,13 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
                     $state.transitionTo('authentication');
                 }
 
-                if(toState.name == 'offline' || toState.name == 'authentication')
+                if(toState.name == 'offline')
                 {
                     event.preventDefault;
-                    if(fromState.name == null || fromState.name=='')
+                    if(fromState.name == null || fromState.name == '')
                     {
-                        $state.transitionTo('online');
+                        $state.transitionTo('online.userProfile');
                     }
-
                 }
 
             });
@@ -149,23 +145,166 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication'])
             });
 
     }])
-    .controller('MainCtrl',[ '$scope','$state', 'AuthenticationService',
-        function ($scope,$state,AuthenticationService) {
+    .controller('MainCtrl',[ '$scope','$state',
+        function ($scope,$state) {
 
-        $scope.$on('LOGIN_SUCCESS', function(event,data) {
-            $state.transitionTo('online');
-        });
-        $scope.$on('LOGOUT_SUCCESS', function(event,data) {
-            $state.transitionTo('offline');
-        });
-        $scope.$on('REGISTER_SUCCESS', function(event,data) {
+            $scope.$on('LOGIN_SUCCESS', function(event,data) {
+                $state.transitionTo('online.userProfile');
+            });
+            $scope.$on('LOGOUT_SUCCESS', function(event,data) {
+                $state.transitionTo('offline');
+            });
+            $scope.$on('REGISTER_SUCCESS', function(event,data) {
 
-            alert(data.email+' we have to do something now that you signed up...validate email or something :)');
-        });
-    }]);
+                alert(data.email+' we have to do something now that you signed up...validate email or something :)');
+            });
+
+        }])
+    .controller('GUICtrl',[ '$scope','$state', 'GUIService',
+        function ($scope,$state,GUIService) {
+
+        $scope.toggleLSB = function(){
+            if(GUIService.isLSBActive())
+            {
+                GUIService.deactivateLSB();
+            }
+            else
+            {
+                GUIService.activateLSB();
+                var device = GUIService.getDevice();
+                if((device=='mobile' || device =='tablet')&&GUIService.isRSBActive())
+                {
+                    GUIService.deactivateRSB();
+                }
+            }
+
+        }
+        $scope.toggleRSB = function(){
+
+            if(GUIService.isRSBActive())
+            {
+                GUIService.deactivateRSB();
+            }
+            else
+            {
+                GUIService.activateRSB();
+                var device = GUIService.getDevice();
+                if((device=='mobile' || device =='tablet')&&GUIService.isLSBActive())
+                {
+                    GUIService.deactivateLSB();
+                }
+            }
+
+        }
+        $scope.toggleBB = function(){
+
+            if(GUIService.isBBActive())
+            {
+                GUIService.deactivateBB();
+            }
+            else
+            {
+                GUIService.activateBB();
+            }
+
+        }
+
+        $scope.goToAuthentication = function(){
+            $state.transitionTo('authentication');
+        }
+        $scope.activateSearch = function(){
+
+        }
+
+    }])
+    .service('GUIService',['$rootScope','$window',
+        function ($rootScope,$window) {
+
+            this.activateLSB =  function(){angular.element( document.querySelector( "#GUI-middle")).addClass("left-sb-active");}
+            this.deactivateLSB =  function(){angular.element( document.querySelector( "#GUI-middle")).removeClass("left-sb-active");}
+            this.isLSBActive =  function(){return angular.element( document.querySelector( "#GUI-middle")).hasClass("left-sb-active");}
+
+            this.activateRSB =  function(){angular.element( document.querySelector( "#GUI-middle")).addClass("right-sb-active");}
+            this.deactivateRSB =  function(){angular.element( document.querySelector( "#GUI-middle")).removeClass("right-sb-active");}
+            this.isRSBActive =  function(){return angular.element( document.querySelector( "#GUI-middle")).hasClass("right-sb-active");}
+
+            this.activateBB =  function(){angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active");}
+            this.deactivateBB =  function(){angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active");}
+            this.isBBActive =  function(){return angular.element( document.querySelector( "#bottom-bar")).hasClass("bottom-bar-active");}
+
+            $rootScope.getWindowWidth = function(){
+                return angular.element($window ).width();
+            };
+            $rootScope.$watch($rootScope.getWindowWidth, function(newWidth){
+                $rootScope.WindowWidth = newWidth;
+            });
+            this.getDevice = function(){
+                if($rootScope.WindowWidth <= 767)
+                {
+                    return 'mobile'
+                }
+                else if($rootScope.WindowWidth <= 991 && $rootScope.WindowWidth > 767)
+                {
+                    return 'tablet'
+                }
+                else if($rootScope.WindowWidth <= 1199 && $rootScope.WindowWidth > 991)
+                {
+                    return 'desktop'
+                }
+                else if($rootScope.WindowWidth >= 1200)
+                {
+                    return 'large'
+                }
+            };
+
+        }])
+    .controller('TopBarCtrl',['$rootScope','$scope','$window','GUIService',
+        function($rootScope,$scope,$window,GUIService){
+
+            $scope.$on('$viewContentLoaded', function(){
+                manageElements();
+            });
+            $window.onresize = function(){
+                manageElements();
+            };
+
+            var manageElements = function(){
+                $scope.$apply();
+                var device = GUIService.getDevice();
+                //we are on a mobile screen
+                if(device == 'mobile')
+                {
+                    angular.element( document.querySelector( "#top-bar-search-toggle")).show();
+                }
+                //we are on a tablet screen
+                else if(device == 'tablet')
+                {
+                    angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
+                }
+                //we are on a desktop or large device screen
+                else if(device == 'desktop' || device== 'large')
+                {
+                    angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
+                }
+
+            }
+
+        }])
+    .controller('LeftSideBarCtrl',['$scope',
+        function($scope){
+
+        }])
+    .controller('RightSideBarCtrl',['$scope',
+        function($scope){
+
+        }])
+    .controller('BottomBarCtrl',['$scope',
+        function($scope){
+
+        }]);
 
 
-//======================== AUTHENTICATION =================================
+//======================== AUTHENTICATION ================================
 var Authentication = angular.module('Authentication',['Rest','ngCookies'])
     .controller('AuthenticationCtrl',[ '$rootScope','$scope', 'AuthenticationService',
         function ($rootScope,$scope,AuthenticationService) {
@@ -371,9 +510,22 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
     }]);
 
 
+//======================== SEARCH ========================================
+var Search = angular.module('Search',['Rest'])
+    .controller('SearchCtrl',[ '$rootScope','$scope', 'SearchService',
+        function ($rootScope,$scope,SearchService) {
+
+        }])
+    .service('SearchService',['$rootScope','RestService',
+        function ($rootScope,RestService) {
+
+
+        }]);
+
+
 //======================= REST ===========================================
 var Rest = angular.module('Rest',['ngResource'])
-    .service('RestService',['$rootScope','$resource' ,
+    .service('RestService',['$rootScope','$resource',
         function ($rootScope,$resource) {
 
         this.get = function(url,urlParams,headers,isArray,successEvent,errorEvent){
@@ -435,133 +587,4 @@ var Rest = angular.module('Rest',['ngResource'])
         }
         this.put = function(url,urlParams,headers,payload,successEvent,errorEvent){}
         this.delete = function(url,urlParams,headers,payload,successEvent,errorEvent){}
-    }]);
-
-
-//======================= GUI =============================================
-var GUI = angular.module('GUI',[])
-    .controller('GUICtrl',['$scope','$state','$window',
-        function ($scope,$state,$window) {
-
-        //===================== Window ==============================
-
-        $scope.$on('$viewContentLoaded', function(){
-           $scope.handleTopBar();
-        });
-        $window.onresize = function(){
-            $scope.$apply();
-
-            if(($scope.isLeftSideBarActive() && $scope.isRightSideBarActive()) && ($scope.getDevice() == 'mobile' || $scope.getDevice() == 'tablet'))
-            {
-                $scope.closeLeftSideBar();
-                $scope.closeRightSideBar();
-            }
-            $scope.handleTopBar();
-        };
-        $scope.getWindowWidth = function(){
-            return angular.element($window ).width();
-        };
-        $scope.$watch($scope.getWindowWidth, function(newWidth){
-            $scope.window_width = newWidth;
-        });
-        $scope.getDevice = function(){
-            if($scope.window_width <= 767)
-            {
-                return 'mobile'
-            }
-            else if($scope.window_width <= 991 && $scope.window_width > 767)
-            {
-                return 'tablet'
-            }
-            else if($scope.window_width <= 1199 && $scope.window_width > 991)
-            {
-                return 'desktop'
-            }
-            else if($scope.window_width >= 1200)
-            {
-                return 'large'
-            }
-        };
-
-        //===================== Top Bar =============================
-
-        $scope.handleTopBar = function() {
-
-            //we are on a mobile screen
-            if($scope.getDevice() == 'mobile')
-            {
-                angular.element( document.querySelector( "#top-bar-search-toggle")).show();
-            }
-            //we are on a tablet screen
-            else if($scope.getDevice() == 'tablet')
-            {
-                angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
-            }
-            //we are on a desktop or large device screen
-            else if($scope.getDevice() == 'desktop' || $scope.getDevice()== 'large')
-            {
-                angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
-            }
-
-        };
-
-        //===================== Side Bars ===========================
-        $scope.toggleLeftSideBar = function(){
-            if($scope.getDevice() == 'mobile' || $scope.getDevice() == 'tablet')
-            {
-                $scope.closeRightSideBar();
-            }
-            angular.element( document.querySelector( '#GUI-middle' ) ).toggleClass("left-sb-active");
-            $scope.handleTopBar();
-        };
-        $scope.toggleRightSideBar = function(){
-
-            if($scope.getDevice() == 'mobile' || $scope.getDevice() == 'tablet')
-            {
-                $scope.closeLeftSideBar();
-            }
-            angular.element( document.querySelector( '#GUI-middle' ) ).toggleClass("right-sb-active");
-            $scope.handleTopBar();
-
-        };
-        $scope.isLeftSideBarActive = function(){
-            if(angular.element( document.querySelector( "#GUI-middle")).hasClass("left-sb-active"))
-            {
-                return true;
-            }
-
-            return false;
-        };
-        $scope.isRightSideBarActive = function(){
-            if(angular.element( document.querySelector( "#GUI-middle")).hasClass("right-sb-active"))
-            {
-                return true;
-            }
-
-            return false;
-        };
-        $scope.openLeftSideBar = function(){
-            angular.element( document.querySelector( "#GUI-middle")).addClass("left-sb-active")
-        };
-        $scope.openRightSideBar = function(){
-            angular.element( document.querySelector( "#GUI-middle")).addClass("right-sb-active")
-        };
-        $scope.closeLeftSideBar = function(){
-            angular.element( document.querySelector( "#GUI-middle")).removeClass("left-sb-active")
-        };
-        $scope.closeRightSideBar = function(){
-            angular.element( document.querySelector( "#GUI-middle")).removeClass("right-sb-active")
-        };
-
-        //====================== Bottom Bar ==========================
-        $scope.toggleBottomBar = function(){
-            angular.element( document.querySelector( '#bottom-bar' ) ).toggleClass("bottom-bar-active");
-        };
-
-        //===================== Authentication =======================
-        $scope.goToAuthentication = function(){
-            $state.transitionTo('authentication');
-
-        };
-
     }]);

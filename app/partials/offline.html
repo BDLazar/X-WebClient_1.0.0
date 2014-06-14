@@ -1,30 +1,27 @@
-<div id="GUI-top">
-         <!--Topbar-->
-         <nav id="top-bar" class="navbar navbar-fixed-top navbar-default container-fluid" role="navigation">
-             <a id="logo" class="navbar-brand" href="#">BRND</a>
-             <a id="top-bar-login-btn" type="button" class="authentication-btn" data-ng-click="goToAuthentication()">Login</a>
-             <a id="top-bar-search-toggle" type="button" data-toggle="collapse" data-target="#top-bar-search-collapse">
-                 <span class="sr-only">Toggle navigation</span>
-                 <span class="glyphicon glyphicon-search"></span>
-             </a>
-             <div id="top-bar-search-collapse" class="collapse navbar-collapse navbar-left">
-                 <form id="top-bar-search-form" class="navbar-form" role="search">
-                     <input id="search-input" type="text" class="form-control input-sm" placeholder="Search">
-                 </form>
-             </div>
-         </nav>
-     </div>
-<div id="GUI-middle">
-         <!-- Left Sidebar -->
-         <div id="left-side-bar">
+<div id="OfflineGUI" data-ng-controller="GUICtrl">
+    <div id="GUI-top">
+        <!--Top bar-->
+        <nav id="top-bar" class="navbar navbar-fixed-top navbar-default container-fluid" role="navigation" data-ng-controller="TopBarCtrl">
+            <a id="logo" class="navbar-brand" href="#">BRND</a>
+            <a id="top-bar-login-btn" type="button" class="authentication-btn" data-ng-click="goToAuthentication()">Login</a>
+            <a id="top-bar-search-toggle" data-ng-click="activateSearch()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-search"></span>
+            </a>
+            <div id="top-bar-search-collapse" class="collapse navbar-collapse navbar-left">
+                <form id="top-bar-search-form" class="navbar-form" role="search">
+                    <input id="search-input" type="text" class="form-control input-sm" placeholder="Search">
+                </form>
+            </div>
+        </nav>
+    </div>
+    <div id="GUI-middle">
+        <!--Center content -->
+        <div class="center-content" ui-view>
+            Default offline data
+        </div>
+    </div>
+    <div id="GUI-bottom">
+    </div>
+</div>
 
-         </div>
-
-         <!--Center content -->
-         <div id="center-content">
-
-         </div>
-     </div>
-<div id="GUI-bottom">
-
-     </div>

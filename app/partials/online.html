@@ -1,18 +1,19 @@
-<div id="GUI-top">
+<div id="OnlineGUI" data-ng-controller="GUICtrl">
+    <div id="GUI-top">
         <!--Top bar-->
-        <nav id="top-bar" class="navbar navbar-fixed-top navbar-default container-fluid" role="navigation">
-            <a id="left-sidebar-toggle" class="navbar-btn" data-toggle="offcanvas" data-ng-click="toggleLeftSideBar()" role="button">
+        <nav id="top-bar" class="navbar navbar-fixed-top navbar-default container-fluid" role="navigation" data-ng-controller="TopBarCtrl">
+            <a id="left-sidebar-toggle" data-ng-click="toggleLSB()">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="glyphicon glyphicon-globe"></span>
             </a>
             <a id="logo" class="navbar-brand" href="#">BRND</a>
-            <a id="right-sidebar-toggle" class="navbar-btn" data-toggle="offcanvas" data-ng-click="toggleRightSideBar()" role="button">
+            <a id="right-sidebar-toggle" data-ng-click="toggleRSB()">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a id="top-bar-search-toggle" type="button" data-toggle="collapse" data-target="#top-bar-search-collapse">
+            <a id="top-bar-search-toggle" data-ng-click="activateSearch()">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="glyphicon glyphicon-search"></span>
             </a>
@@ -23,26 +24,27 @@
             </div>
         </nav>
     </div>
-<div id="GUI-middle">
+    <div id="GUI-middle">
         <!-- Left Sidebar -->
-        <div id="left-side-bar">
+        <div id="left-side-bar" data-ng-controller="LeftSideBarCtrl">
 
         </div>
-
         <!-- Right Sidebar -->
-        <div id="right-side-bar">
+        <div id="right-side-bar" data-ng-controller="RightSideBarCtrl">
             <a id="right-side-bar-logout-btn" type="submit" class="btn btn-default btn-sm" data-ng-controller="AuthenticationCtrl" data-ng-click="logout()">Logout</a>
         </div>
-
         <!--Center content -->
-        <div id="center-content">
-
+        <div class="center-content" ui-view>
+            Default online content
         </div>
     </div>
-<div id="GUI-bottom">
-        <nav id="bottom-bar" class="navbar-fixed-bottom navbar-default container-fluid" role="navigation" data-ng-click="toggleBottomBar()">
+    <div id="GUI-bottom">
+        <nav id="bottom-bar" class="navbar-fixed-bottom navbar-default container-fluid" role="navigation" data-ng-controller="BottomBarCtrl" data-ng-click="toggleBB()">
 
         </nav>
     </div>
+</div>
+
+
 
 
