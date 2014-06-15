@@ -1,5 +1,5 @@
 //=============================== MAIN ===================================
-var XClient = angular.module('X-Client', ['ui.router','Authentication','Search'])
+var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Search'])
     .config(['$stateProvider', '$urlRouterProvider',
         function($stateProvider, $urlRouterProvider) {
 
@@ -109,21 +109,6 @@ var XClient = angular.module('X-Client', ['ui.router','Authentication','Search']
             function(event, toState, toParams, fromState, fromParams){
 
                 console.log("State Change: Error :"+' from '+ fromState.name + ' to '+ toState.name);
-
-                if(toState.name == 'online')
-                {
-                    $state.transitionTo('authentication');
-                }
-
-                if(toState.name == 'offline')
-                {
-                    event.preventDefault;
-                    if(fromState.name == null || fromState.name == '')
-                    {
-                        $state.transitionTo('online.userProfile');
-                    }
-                }
-
             });
 
         $rootScope
@@ -145,8 +130,27 @@ var XClient = angular.module('X-Client', ['ui.router','Authentication','Search']
             });
 
     }])
-    .controller('MainCtrl',[ '$scope','$state',
-        function ($scope,$state) {
+    .controller('MainCtrl',['$rootScope','$scope','$state',
+        function ($rootScope,$scope,$state) {
+
+
+            $scope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams){
+
+                if(toState.name == 'online')
+                {
+                    $state.transitionTo('authentication');
+                }
+
+                if(toState.name == 'offline')
+                {
+                    event.preventDefault;
+                    if(fromState.name == null || fromState.name == '')
+                    {
+                        $state.transitionTo('online.userProfile');
+                    }
+                }
+
+            });
 
             $scope.$on('LOGIN_SUCCESS', function(event,data) {
                 $state.transitionTo('online.userProfile');
@@ -158,10 +162,16 @@ var XClient = angular.module('X-Client', ['ui.router','Authentication','Search']
 
                 alert(data.email+' we have to do something now that you signed up...validate email or something :)');
             });
+            $scope.$on('GO_TO_AUTHENTICATION', function(event,data) {
+                $state.transitionTo('authentication');
+            });
 
-        }])
-    .controller('GUICtrl',[ '$scope','$state', 'GUIService',
-        function ($scope,$state,GUIService) {
+        }]);
+
+//======================== GUI ==========================================
+var GUI = angular.module('GUI',[])
+    .controller('GUICtrl',[ '$rootScope','$scope','$window','GUIService',
+        function ($rootScope,$scope,$window,GUIService) {
 
         $scope.toggleLSB = function(){
             if(GUIService.isLSBActive())
@@ -210,11 +220,31 @@ var XClient = angular.module('X-Client', ['ui.router','Authentication','Search']
         }
 
         $scope.goToAuthentication = function(){
-            $state.transitionTo('authentication');
+            $rootScope.$broadcast('GO_TO_AUTHENTICATION');
         }
         $scope.activateSearch = function(){
 
         }
+
+        $window.onresize = function(){
+            var device = GUIService.getDevice();
+            if(device == 'tablet' || device == 'mobile')
+            {
+                if(GUIService.isLSBActive() && GUIService.isRSBActive())
+                {
+                    GUIService.deactivateLSB();
+                    GUIService.deactivateRSB();
+                }
+            }
+
+            var data = {device : device};
+            $scope.$broadcast('MANAGE_GUI_ELEMENTS', data);
+
+        };
+        $scope.$on('$viewContentLoaded',function(){
+            var data = {device : GUIService.getDevice()};
+            $scope.$broadcast('MANAGE_GUI_ELEMENTS', data);
+        });
 
     }])
     .service('GUIService',['$rootScope','$window',
@@ -232,45 +262,34 @@ var XClient = angular.module('X-Client', ['ui.router','Authentication','Search']
             this.deactivateBB =  function(){angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active");}
             this.isBBActive =  function(){return angular.element( document.querySelector( "#bottom-bar")).hasClass("bottom-bar-active");}
 
-            $rootScope.getWindowWidth = function(){
-                return angular.element($window ).width();
-            };
-            $rootScope.$watch($rootScope.getWindowWidth, function(newWidth){
-                $rootScope.WindowWidth = newWidth;
-            });
             this.getDevice = function(){
-                if($rootScope.WindowWidth <= 767)
+
+                var windowWidth = angular.element($window ).width();
+                if(windowWidth <= 767)
                 {
                     return 'mobile'
                 }
-                else if($rootScope.WindowWidth <= 991 && $rootScope.WindowWidth > 767)
+                else if(windowWidth <= 991 && windowWidth > 767)
                 {
                     return 'tablet'
                 }
-                else if($rootScope.WindowWidth <= 1199 && $rootScope.WindowWidth > 991)
+                else if(windowWidth <= 1199 && windowWidth > 991)
                 {
                     return 'desktop'
                 }
-                else if($rootScope.WindowWidth >= 1200)
+                else if(windowWidth >= 1200)
                 {
                     return 'large'
                 }
-            };
+            }
 
         }])
-    .controller('TopBarCtrl',['$rootScope','$scope','$window','GUIService',
-        function($rootScope,$scope,$window,GUIService){
+    .controller('TopBarCtrl',['$rootScope','$scope',
+        function($rootScope,$scope){
 
-            $scope.$on('$viewContentLoaded', function(){
-                manageElements();
-            });
-            $window.onresize = function(){
-                manageElements();
-            };
+            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
+                var device = data.device;
 
-            var manageElements = function(){
-                $scope.$apply();
-                var device = GUIService.getDevice();
                 //we are on a mobile screen
                 if(device == 'mobile')
                 {
@@ -287,19 +306,41 @@ var XClient = angular.module('X-Client', ['ui.router','Authentication','Search']
                     angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
                 }
 
-            }
+
+            });
+        }])
+    .controller('LeftSideBarCtrl',['$rootScope','$scope',
+        function($rootScope,$scope){
+
+            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
+                var device = data.device;
+
+            });
+        }])
+    .controller('RightSideBarCtrl',['$rootScope','$scope',
+        function($rootScope,$scope){
+
+            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
+                var device = data.device;
+
+            });
+        }])
+    .controller('BottomBarCtrl',['$rootScope','$scope',
+        function($rootScope,$scope){
+
+            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
+                var device = data.device;
+
+            });
 
         }])
-    .controller('LeftSideBarCtrl',['$scope',
-        function($scope){
+    .controller('CenterContentCtrl',['$rootScope','$scope',
+        function($rootScope,$scope){
 
-        }])
-    .controller('RightSideBarCtrl',['$scope',
-        function($scope){
+            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
+                var device = data.device;
 
-        }])
-    .controller('BottomBarCtrl',['$scope',
-        function($scope){
+            });
 
         }]);
 
@@ -508,7 +549,6 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
             RestService.get(url,urlParams,headers,isArray,'VALIDATE_USER_SESSION_RESPONSE','VALIDATE_USER_SESSION__ERROR');
         };
     }]);
-
 
 //======================== SEARCH ========================================
 var Search = angular.module('Search',['Rest'])
