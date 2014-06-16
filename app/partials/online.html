@@ -1,36 +1,35 @@
-<div id="OnlineGUI" data-ng-controller="GUICtrl">
-    <div id="GUI-top">
-        <!--Top bar-->
-        <nav id="top-bar" class="navbar navbar-fixed-top navbar-default container-fluid" role="navigation" data-ng-controller="TopBarCtrl">
-            <a id="left-sidebar-toggle" data-ng-click="toggleLSB()">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="glyphicon glyphicon-globe"></span>
-            </a>
-            <a id="logo" class="navbar-brand" href="#">BRND</a>
-            <a id="right-sidebar-toggle" data-ng-click="toggleRSB()">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a id="top-bar-search-toggle" data-ng-click="activateSearch()">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="glyphicon glyphicon-search"></span>
-            </a>
-            <div id="top-bar-search-collapse" class="collapse navbar-collapse navbar-left">
-                <form id="top-bar-search-form" class="navbar-form" role="search">
-                    <input id="search-input" type="text" class="form-control input-sm" placeholder="Search">
-                </form>
-            </div>
-        </nav>
-    </div>
+<div data-ng-controller="GUICtrl">
+
+    <!--Top bar-->
+    <nav id="top-bar" class="navbar navbar-fixed-top navbar-default container-fluid" role="navigation">
+        <a id="left-sidebar-toggle" data-ng-click="toggleLSB()">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="glyphicon glyphicon-globe"></span>
+        </a>
+        <a id="logo" class="navbar-brand" href="#">BRND</a>
+        <a id="right-sidebar-toggle" data-ng-click="toggleRSB()">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+        <a id="top-bar-search-toggle" data-ng-click="activateSearch()">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="glyphicon glyphicon-search"></span>
+        </a>
+        <div id="top-bar-search-collapse" class="collapse navbar-collapse navbar-left">
+            <form id="top-bar-search-form" class="navbar-form" role="search">
+                <input id="search-input" type="text" class="form-control input-sm" placeholder="Search" data-ng-click="activateSearch()">
+            </form>
+        </div>
+    </nav>
     <div id="GUI-middle">
         <!-- Left Sidebar -->
-        <div id="left-side-bar" data-ng-controller="LeftSideBarCtrl">
+        <div id="left-side-bar">
 
         </div>
         <!-- Right Sidebar -->
-        <div id="right-side-bar" data-ng-controller="RightSideBarCtrl">
+        <div id="right-side-bar">
             <a id="right-side-bar-logout-btn" type="submit" class="btn btn-default btn-sm" data-ng-controller="AuthenticationCtrl" data-ng-click="logout()">Logout</a>
         </div>
         <!--Center content -->
@@ -38,10 +37,18 @@
             Default online content
         </div>
     </div>
-    <div id="GUI-bottom">
-        <nav id="bottom-bar" class="navbar-fixed-bottom navbar-default container-fluid" role="navigation" data-ng-controller="BottomBarCtrl" data-ng-click="toggleBB()">
+    <!--Bottom Bar-->
+    <nav id="bottom-bar" class="navbar-fixed-bottom navbar-default container-fluid" role="navigation" data-ng-click="toggleBB()"></nav>
+    <!--Search panel-->
+    <div id="search-panel">
+        <div id="search-controls">
+            <input id="smdev-search-input" type="text" class="form-control input-sm " placeholder="Search">
 
-        </nav>
+        </div>
+        <div id="search-results">
+            <a data-ng-click="deactivateSearch()">Close</a>
+            These are some search results
+        </div>
     </div>
 </div>
 

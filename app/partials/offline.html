@@ -1,7 +1,7 @@
-<div id="OfflineGUI" data-ng-controller="GUICtrl">
-    <div id="GUI-top">
-        <!--Top bar-->
-        <nav id="top-bar" class="navbar navbar-fixed-top navbar-default container-fluid" role="navigation" data-ng-controller="TopBarCtrl">
+<div data-ng-controller="GUICtrl">
+
+    <!--Top bar-->
+    <nav id="top-bar" class="navbar navbar-fixed-top navbar-default container-fluid" role="navigation">
             <a id="logo" class="navbar-brand" href="#">BRND</a>
             <a id="top-bar-login-btn" type="button" class="authentication-btn" data-ng-click="goToAuthentication()">Login</a>
             <a id="top-bar-search-toggle" data-ng-click="activateSearch()">
@@ -10,18 +10,27 @@
             </a>
             <div id="top-bar-search-collapse" class="collapse navbar-collapse navbar-left">
                 <form id="top-bar-search-form" class="navbar-form" role="search">
-                    <input id="search-input" type="text" class="form-control input-sm" placeholder="Search">
+                    <input id="search-input" type="text" class="form-control input-sm" placeholder="Search" data-ng-click="activateSearch()">
                 </form>
             </div>
         </nav>
-    </div>
     <div id="GUI-middle">
         <!--Center content -->
         <div class="center-content" ui-view>
             Default offline data
         </div>
     </div>
-    <div id="GUI-bottom">
+    <!--Search panel-->
+    <div id="search-panel">
+        <div id="search-controls">
+            <input id="smdev-search-input" type="text" class="form-control input-sm " placeholder="Search">
+
+        </div>
+        <div id="search-results">
+            <a data-ng-click="deactivateSearch()">Close</a>
+            These are some search results
+        </div>
     </div>
+
 </div>
 

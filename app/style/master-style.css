@@ -1,11 +1,4 @@
-#OfflineGUI {
-}
-#OnlineGUI {
-}
 /*===============TOP==============*/
-#GUI-top{
-
-}
 #top-bar{
     height: 50px !important;
     display: block !important;
@@ -71,12 +64,6 @@
     margin-left:19px;
     margin-top: 16px;
 }
-#top-bar-search-collapse{
-
-}
-#top-bar-search-collapse #top-bar-search-form{
-
-}
 
 #top-bar-login-btn{
     float:right;
@@ -95,6 +82,27 @@
     background: #eeeeee !important;
     text-decoration: none;
 }
+
+#search-panel{
+    transition: all .3s ease 0s;
+    background-color: #333333;
+    position:fixed;
+    height: 100%;
+    width: 100%;
+    top:-100%;
+    z-index: 999999;
+}
+#search-panel.search-panel-active{
+    top:0;
+}
+
+#search-panel #search-controls{
+    height: 50px;
+}
+#search-panel #search-results{
+    color:#ffffff;
+}
+
 
 /*===============MIDDLE===========*/
 
@@ -137,9 +145,7 @@
 }
 
 /*===============BOTTOM============*/
-#GUI-bottom{
 
-}
 #bottom-bar{
     bottom: -280px;
     min-height: 300px;

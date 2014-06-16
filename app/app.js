@@ -26,6 +26,21 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
                         }
 
                         return defer.promise;
+                    },
+                    checkSearchPanel: function($q,SearchPanelService)
+                    {
+                        var defer = $q.defer();
+                        if(SearchPanelService.isSearchPanelActive() == false)
+                        {
+                            defer.resolve();
+                        }
+                        else
+                        {
+                            SearchPanelService.deactivateSearchPanel();
+                            defer.reject();
+                        }
+
+                        return defer.promise;
                     }
                 }
             })
@@ -33,7 +48,25 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
             .state('authentication',{
 
                 url:'/authentication',
-                templateUrl:'app/partials/authentication.html'
+                templateUrl:'app/partials/authentication.html',
+                resolve:
+                {
+                    checkSearchPanel: function($q,SearchPanelService)
+                    {
+                        var defer = $q.defer();
+                        if(SearchPanelService.isSearchPanelActive() == false)
+                        {
+                            defer.resolve();
+                        }
+                        else
+                        {
+                            SearchPanelService.deactivateSearchPanel();
+                            defer.reject();
+                        }
+
+                        return defer.promise;
+                    }
+                }
             })
 
             .state('online', {
@@ -69,6 +102,21 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
                         }
 
                         return defer.promise;
+                    },
+                    checkSearchPanel: function($q,SearchPanelService)
+                    {
+                        var defer = $q.defer();
+                        if(SearchPanelService.isSearchPanelActive() == false)
+                        {
+                            defer.resolve();
+                        }
+                        else
+                        {
+                            SearchPanelService.deactivateSearchPanel();
+                            defer.reject();
+                        }
+
+                        return defer.promise;
                     }
                 }
             })
@@ -76,26 +124,61 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
             .state('online.userProfile',{
 
                 url:'/userProfile',
-                templateUrl:'app/partials/online/userProfile.html'
+                templateUrl:'app/partials/online/userProfile.html',
+                resolve:
+                {
+                    checkSearchPanel: function($q,SearchPanelService)
+                    {
+                        var defer = $q.defer();
+                        if(SearchPanelService.isSearchPanelActive() == false)
+                        {
+                            defer.resolve();
+                        }
+                        else
+                        {
+                            SearchPanelService.deactivateSearchPanel();
+                            defer.reject();
+                        }
+
+                        return defer.promise;
+                    }
+                }
 
             })
 
             .state('online.newsFeed',{
 
                 url:'/newsFeed',
-                templateUrl:'app/partials/online/newsFeed.html'
+                templateUrl:'app/partials/online/newsFeed.html',
+                resolve:
+                {
+                    checkSearchPanel: function($q,SearchPanelService)
+                    {
+                        var defer = $q.defer();
+                        if(SearchPanelService.isSearchPanelActive() == false)
+                        {
+                            defer.resolve();
+                        }
+                        else
+                        {
+                            SearchPanelService.deactivateSearchPanel();
+                            defer.reject();
+                        }
+
+                        return defer.promise;
+                    }
+                }
 
             })
 
     }])
-    .run(['$rootScope','$state',
-        function($rootScope,$state){
+    .run(['$rootScope',
+        function($rootScope){
 
         $rootScope
             .$on('$stateChangeStart',
             function(event, toState, toParams, fromState, fromParams){
                 console.log("State Change: transition begins :" + ' from '+ fromState.name + ' to '+ toState.name);
-
             });
 
         $rootScope
@@ -133,7 +216,6 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
     .controller('MainCtrl',['$rootScope','$scope','$state',
         function ($rootScope,$scope,$state) {
 
-
             $scope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams){
 
                 if(toState.name == 'online')
@@ -151,7 +233,6 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
                 }
 
             });
-
             $scope.$on('LOGIN_SUCCESS', function(event,data) {
                 $state.transitionTo('online.userProfile');
             });
@@ -170,51 +251,59 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
 
 //======================== GUI ==========================================
 var GUI = angular.module('GUI',[])
-    .controller('GUICtrl',[ '$rootScope','$scope','$window','GUIService',
-        function ($rootScope,$scope,$window,GUIService) {
+    .controller('GUICtrl',[ '$rootScope','$scope','$state','$window','GUIService','TopBarService','LeftSideBarService','RightSideBarService','BottomBarService','CenterContentService','SearchPanelService',
+        function ($rootScope,$scope,$state,$window,GUIService,TopBarService,LeftSideBarService,RightSidebarService,BottomBarService,CenterContentService,SearchPanelService) {
 
         $scope.toggleLSB = function(){
-            if(GUIService.isLSBActive())
+
+            if(LeftSideBarService.isLSBActive())
             {
-                GUIService.deactivateLSB();
+                LeftSideBarService.deactivateLSB();
             }
             else
             {
-                GUIService.activateLSB();
-                var device = GUIService.getDevice();
-                if((device=='mobile' || device =='tablet')&&GUIService.isRSBActive())
+                if(SearchPanelService.isSearchPanelActive())
                 {
-                    GUIService.deactivateRSB();
+                    SearchPanelService.deactivateSearchPanel();
+                }
+                LeftSideBarService.activateLSB();
+                var device = GUIService.getDevice();
+                if((device == 'mobile' || device == 'tablet') && RightSidebarService.isRSBActive())
+                {
+                    RightSidebarService.deactivateRSB();
                 }
             }
 
         }
         $scope.toggleRSB = function(){
 
-            if(GUIService.isRSBActive())
+            if(RightSidebarService.isRSBActive())
             {
-                GUIService.deactivateRSB();
+                RightSidebarService.deactivateRSB();
             }
             else
-            {
-                GUIService.activateRSB();
-                var device = GUIService.getDevice();
-                if((device=='mobile' || device =='tablet')&&GUIService.isLSBActive())
+            {   if(SearchPanelService.isSearchPanelActive())
                 {
-                    GUIService.deactivateLSB();
+                    SearchPanelService.deactivateSearchPanel();
+                }
+                RightSidebarService.activateRSB();
+                var device = GUIService.getDevice();
+                if((device == 'mobile' || device == 'tablet')&& LeftSideBarService.isLSBActive())
+                {
+                    LeftSideBarService.deactivateLSB();
                 }
             }
 
         }
         $scope.toggleBB = function(){
 
-            if(GUIService.isBBActive())
+            if(BottomBarService.isBBActive())
             {
-                GUIService.deactivateBB();
+                BottomBarService.deactivateBB();
             }
             else
             {
-                GUIService.activateBB();
+                BottomBarService.activateBB();
             }
 
         }
@@ -223,44 +312,37 @@ var GUI = angular.module('GUI',[])
             $rootScope.$broadcast('GO_TO_AUTHENTICATION');
         }
         $scope.activateSearch = function(){
-
+            SearchPanelService.activateSearchPanel();
+        }
+        $scope.deactivateSearch = function(){
+            SearchPanelService.deactivateSearchPanel();
         }
 
         $window.onresize = function(){
+
             var device = GUIService.getDevice();
             if(device == 'tablet' || device == 'mobile')
             {
-                if(GUIService.isLSBActive() && GUIService.isRSBActive())
+                if(LeftSideBarService.isLSBActive() && RightSidebarService.isRSBActive())
                 {
-                    GUIService.deactivateLSB();
-                    GUIService.deactivateRSB();
+                    LeftSideBarService.deactivateLSB();
+                    RightSidebarService.deactivateRSB();
                 }
             }
 
-            var data = {device : device};
-            $scope.$broadcast('MANAGE_GUI_ELEMENTS', data);
+            TopBarService.handleElements(device);
+            SearchPanelService.handleElements(device);
+
 
         };
         $scope.$on('$viewContentLoaded',function(){
-            var data = {device : GUIService.getDevice()};
-            $scope.$broadcast('MANAGE_GUI_ELEMENTS', data);
+            var device =  GUIService.getDevice();
+            TopBarService.handleElements(device);
+            SearchPanelService.handleElements(device);
         });
-
     }])
     .service('GUIService',['$rootScope','$window',
         function ($rootScope,$window) {
-
-            this.activateLSB =  function(){angular.element( document.querySelector( "#GUI-middle")).addClass("left-sb-active");}
-            this.deactivateLSB =  function(){angular.element( document.querySelector( "#GUI-middle")).removeClass("left-sb-active");}
-            this.isLSBActive =  function(){return angular.element( document.querySelector( "#GUI-middle")).hasClass("left-sb-active");}
-
-            this.activateRSB =  function(){angular.element( document.querySelector( "#GUI-middle")).addClass("right-sb-active");}
-            this.deactivateRSB =  function(){angular.element( document.querySelector( "#GUI-middle")).removeClass("right-sb-active");}
-            this.isRSBActive =  function(){return angular.element( document.querySelector( "#GUI-middle")).hasClass("right-sb-active");}
-
-            this.activateBB =  function(){angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active");}
-            this.deactivateBB =  function(){angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active");}
-            this.isBBActive =  function(){return angular.element( document.querySelector( "#bottom-bar")).hasClass("bottom-bar-active");}
 
             this.getDevice = function(){
 
@@ -284,11 +366,10 @@ var GUI = angular.module('GUI',[])
             }
 
         }])
-    .controller('TopBarCtrl',['$rootScope','$scope',
-        function($rootScope,$scope){
+    .service('TopBarService',['$rootScope',
+        function ($rootScope) {
 
-            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
-                var device = data.device;
+            this.handleElements = function(device){
 
                 //we are on a mobile screen
                 if(device == 'mobile')
@@ -305,42 +386,69 @@ var GUI = angular.module('GUI',[])
                 {
                     angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
                 }
-
-
-            });
-        }])
-    .controller('LeftSideBarCtrl',['$rootScope','$scope',
-        function($rootScope,$scope){
-
-            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
-                var device = data.device;
-
-            });
-        }])
-    .controller('RightSideBarCtrl',['$rootScope','$scope',
-        function($rootScope,$scope){
-
-            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
-                var device = data.device;
-
-            });
-        }])
-    .controller('BottomBarCtrl',['$rootScope','$scope',
-        function($rootScope,$scope){
-
-            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
-                var device = data.device;
-
-            });
+            }
 
         }])
-    .controller('CenterContentCtrl',['$rootScope','$scope',
-        function($rootScope,$scope){
+    .service('LeftSideBarService',['$rootScope',
+        function ($rootScope) {
 
-            $scope.$on('MANAGE_GUI_ELEMENTS', function(event,data){
-                var device = data.device;
+            this.activateLSB =  function(){angular.element( document.querySelector( "#GUI-middle")).addClass("left-sb-active");}
+            this.deactivateLSB =  function(){angular.element( document.querySelector( "#GUI-middle")).removeClass("left-sb-active");}
+            this.isLSBActive =  function(){return angular.element( document.querySelector( "#GUI-middle")).hasClass("left-sb-active");}
 
-            });
+        }])
+    .service('RightSideBarService',['$rootScope',
+        function ($rootScope) {
+
+            this.activateRSB =  function(){angular.element( document.querySelector( "#GUI-middle")).addClass("right-sb-active");}
+            this.deactivateRSB =  function(){angular.element( document.querySelector( "#GUI-middle")).removeClass("right-sb-active");}
+            this.isRSBActive =  function(){return angular.element( document.querySelector( "#GUI-middle")).hasClass("right-sb-active");}
+
+        }])
+    .service('BottomBarService',['$rootScope','$window',
+        function ($rootScope) {
+
+            this.activateBB =  function(){angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active");}
+            this.deactivateBB =  function(){angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active");}
+            this.isBBActive =  function(){return angular.element( document.querySelector( "#bottom-bar")).hasClass("bottom-bar-active");}
+
+        }])
+    .service('CenterContentService',['$rootScope','$window',
+        function ($rootScope) {
+
+
+        }])
+    .service('SearchPanelService',['$rootScope','$window',
+        function ($rootScope) {
+
+            this.activateSearchPanel = function(){
+                angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active");
+            }
+            this.deactivateSearchPanel = function(){
+                angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active");
+            }
+            this.isSearchPanelActive = function(){
+                if(angular.element( document.querySelector( "#search-panel")).hasClass("search-panel-active"))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            this.handleElements = function(device){
+
+                if(device == 'mobile')
+                {
+                    angular.element( document.querySelector( "#smdev-search-input")).show();
+                    angular.element( document.querySelector( "#search-panel")).css('z-index',999999);
+
+                }
+                else
+                {
+                    angular.element( document.querySelector( "#smdev-search-input")).hide();
+                    angular.element( document.querySelector( "#search-panel")).css('z-index',0);
+                }
+            }
 
         }]);
 
