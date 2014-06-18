@@ -8,10 +8,8 @@
                 <span class="sr-only">Toggle navigation</span>
                 <span class="glyphicon glyphicon-search"></span>
             </a>
-            <div id="top-bar-search-collapse" class="collapse navbar-collapse navbar-left">
-                <form id="top-bar-search-form" class="navbar-form" role="search">
-                    <input id="search-input" type="text" class="form-control input-sm" placeholder="Search" data-ng-click="activateSearch()">
-                </form>
+            <div id="search-bar" class="col-xs-3">
+                <input id="search-input" type="search" class="form-control input-sm" placeholder="Search" data-ng-model="searchString" data-ng-click="activateSearch()"/>
             </div>
         </nav>
     <div id="GUI-middle">
@@ -23,8 +21,7 @@
     <!--Search panel-->
     <div id="search-panel">
         <div id="search-controls">
-            <input id="smdev-search-input" type="text" class="form-control input-sm " placeholder="Search">
-
+            <input id="search-panel-input" type="search" class="form-control input-sm" placeholder="Search" data-ng-model="searchString"/>
         </div>
         <div id="search-results">
             <a data-ng-click="deactivateSearch()">Close</a>
