@@ -281,6 +281,8 @@ var GUI = angular.module('GUI',[])
             }
             else
             {
+                var device = GUIService.getDevice();
+
                 if(SearchPanelService.isSearchPanelActive())
                 {
                     SearchPanelService.deactivateSearchPanel();
@@ -289,8 +291,8 @@ var GUI = angular.module('GUI',[])
                 {
                     BottomBarService.deactivateBB();
                 }
-                LeftSideBarService.activateLSB();
-                var device = GUIService.getDevice();
+                LeftSideBarService.activateLSB(device);
+
                 if((device == 'mobile' || device == 'tablet') && RightSideBarService.isRSBActive())
                 {
                     RightSideBarService.deactivateRSB();
@@ -305,6 +307,8 @@ var GUI = angular.module('GUI',[])
                 RightSideBarService.deactivateRSB();
             }
             else
+                var device = GUIService.getDevice();
+
             {   if(SearchPanelService.isSearchPanelActive())
                 {
                     SearchPanelService.deactivateSearchPanel();
@@ -313,8 +317,8 @@ var GUI = angular.module('GUI',[])
                 {
                     BottomBarService.deactivateBB();
                 }
-                RightSideBarService.activateRSB();
-                var device = GUIService.getDevice();
+                RightSideBarService.activateRSB(device);
+
                 if((device == 'mobile' || device == 'tablet')&& LeftSideBarService.isLSBActive())
                 {
                     LeftSideBarService.deactivateLSB();
@@ -374,6 +378,8 @@ var GUI = angular.module('GUI',[])
 
             TopBarService.handleElements(device);
             SearchPanelService.handleElements(device);
+            RightSideBarService.handleElements(device);
+            LeftSideBarService.handleElements(device);
 
 
         };
@@ -381,6 +387,8 @@ var GUI = angular.module('GUI',[])
             var device =  GUIService.getDevice();
             TopBarService.handleElements(device);
             SearchPanelService.handleElements(device);
+            RightSideBarService.handleElements(device);
+            LeftSideBarService.handleElements(device);
         });
     }])
     .service('GUIService',['$rootScope','$window',
@@ -437,18 +445,158 @@ var GUI = angular.module('GUI',[])
     .service('LeftSideBarService',['$rootScope',
         function ($rootScope) {
 
-            this.activateLSB =  function(){angular.element( document.querySelector( "#GUI-middle")).addClass("left-sb-active");}
-            this.deactivateLSB =  function(){angular.element( document.querySelector( "#GUI-middle")).removeClass("left-sb-active");}
-            this.isLSBActive =  function(){return angular.element( document.querySelector( "#GUI-middle")).hasClass("left-sb-active");}
+            this.activateLSB =  function(device){
+
+                switch (device){
+
+                    case 'mobile':
+                        angular.element( document.querySelector( "#page-instance")).addClass("lsb-active-xs");
+                        break;
+                    case 'tablet':
+                        angular.element( document.querySelector( "#page-instance")).addClass("lsb-active-sm");
+                        break;
+                    case 'desktop':
+                        angular.element( document.querySelector( "#page-instance")).addClass("lsb-active-md");
+                        break;
+                    case 'large':
+                        angular.element( document.querySelector( "#page-instance")).addClass("lsb-active-lg");
+                        break;
+                }
+
+            }
+            this.deactivateLSB =  function(){
+                angular.element( document.querySelector( "#page-instance")).removeClass("lsb-active-xs");
+                angular.element( document.querySelector( "#page-instance")).removeClass("lsb-active-sm");
+                angular.element( document.querySelector( "#page-instance")).removeClass("lsb-active-md");
+                angular.element( document.querySelector( "#page-instance")).removeClass("lsb-active-lg");
+            }
+            this.isLSBActive =  function(){
+
+                if( angular.element( document.querySelector( "#page-instance")).hasClass("lsb-active-xs") ||
+                    angular.element( document.querySelector( "#page-instance")).hasClass("lsb-active-sm") ||
+                    angular.element( document.querySelector( "#page-instance")).hasClass("lsb-active-md") ||
+                    angular.element( document.querySelector( "#page-instance")).hasClass("lsb-active-lg"))
+                {
+                    return true;
+                }
+
+                return false;
+
+            }
+            this.handleElements= function(device){
+
+                switch (device){
+
+                    case 'mobile':
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("sm");
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("md");
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("lg");
+                        angular.element( document.querySelector( "#left-side-bar")).addClass("xs");
+                        break;
+                    case 'tablet':
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("xs");
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("md");
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("lg");
+                        angular.element( document.querySelector( "#left-side-bar")).addClass("sm");
+                        break;
+                    case 'desktop':
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("xs");
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("sm");
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("lg");
+                        angular.element( document.querySelector( "#left-side-bar")).addClass("md");
+                        break;
+                    case 'large':
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("xs");
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("sm");
+                        angular.element( document.querySelector( "#left-side-bar")).removeClass("md");
+                        angular.element( document.querySelector( "#left-side-bar")).addClass("lg");
+                        break;
+                }
+
+                if(this.isLSBActive())
+                {
+                    this.deactivateLSB();
+                    this.activateLSB(device);
+                }
+            }
 
         }])
     .service('RightSideBarService',['$rootScope',
         function ($rootScope) {
 
-            this.activateRSB =  function(){angular.element( document.querySelector( "#GUI-middle")).addClass("right-sb-active");}
-            this.deactivateRSB =  function(){angular.element( document.querySelector( "#GUI-middle")).removeClass("right-sb-active");}
-            this.isRSBActive =  function(){return angular.element( document.querySelector( "#GUI-middle")).hasClass("right-sb-active");}
+            this.activateRSB =  function(device){
 
+                switch (device){
+
+                    case 'mobile':
+                        angular.element( document.querySelector( "#page-instance")).addClass("rsb-active-xs");
+                        break;
+                    case 'tablet':
+                        angular.element( document.querySelector( "#page-instance")).addClass("rsb-active-sm");
+                        break;
+                    case 'desktop':
+                        angular.element( document.querySelector( "#page-instance")).addClass("rsb-active-md");
+                        break;
+                    case 'large':
+                        angular.element( document.querySelector( "#page-instance")).addClass("rsb-active-lg");
+                        break;
+                }
+
+            }
+            this.deactivateRSB =  function(){
+                angular.element( document.querySelector( "#page-instance")).removeClass("rsb-active-xs");
+                angular.element( document.querySelector( "#page-instance")).removeClass("rsb-active-sm");
+                angular.element( document.querySelector( "#page-instance")).removeClass("rsb-active-md");
+                angular.element( document.querySelector( "#page-instance")).removeClass("rsb-active-lg");
+            }
+            this.isRSBActive =  function(){
+
+                if( angular.element( document.querySelector( "#page-instance")).hasClass("rsb-active-xs") ||
+                    angular.element( document.querySelector( "#page-instance")).hasClass("rsb-active-sm") ||
+                    angular.element( document.querySelector( "#page-instance")).hasClass("rsb-active-md") ||
+                    angular.element( document.querySelector( "#page-instance")).hasClass("rsb-active-lg"))
+                {
+                    return true;
+                }
+
+                return false;
+
+            }
+            this.handleElements= function(device){
+                switch (device){
+
+                    case 'mobile':
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("sm");
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("md");
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("lg");
+                        angular.element( document.querySelector( "#right-side-bar")).addClass("xs");
+                        break;
+                    case 'tablet':
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("xs");
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("md");
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("lg");
+                        angular.element( document.querySelector( "#right-side-bar")).addClass("sm");
+                        break;
+                    case 'desktop':
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("xs");
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("sm");
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("lg");
+                        angular.element( document.querySelector( "#right-side-bar")).addClass("md");
+                        break;
+                    case 'large':
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("xs");
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("sm");
+                        angular.element( document.querySelector( "#right-side-bar")).removeClass("md");
+                        angular.element( document.querySelector( "#right-side-bar")).addClass("lg");
+                        break;
+                }
+
+                if(this.isRSBActive())
+                {
+                    this.deactivateRSB();
+                    this.activateRSB(device);
+                }
+            }
         }])
     .service('BottomBarService',['$rootScope','$window',
         function ($rootScope) {
@@ -470,20 +618,20 @@ var GUI = angular.module('GUI',[])
 
                 if(device=='mobile')
                 {
-                    angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active-smdev");
+                    angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active-xs");
                 }
                 else
                 {
-                    angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active-lgdev");
+                    angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active-default");
                 }
 
             }
             this.deactivateSearchPanel = function(){
-                angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active-smdev");
-                angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active-lgdev");
+                angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active-xs");
+                angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active-default");
             }
             this.isSearchPanelActive = function(){
-                if(angular.element( document.querySelector( "#search-panel")).hasClass("search-panel-active-smdev") || angular.element( document.querySelector( "#search-panel")).hasClass("search-panel-active-lgdev"))
+                if(angular.element( document.querySelector( "#search-panel")).hasClass("search-panel-active-xs") || angular.element( document.querySelector( "#search-panel")).hasClass("search-panel-active-default"))
                 {
                     return true;
                 }
@@ -497,15 +645,15 @@ var GUI = angular.module('GUI',[])
                     if(device == 'mobile')
                     {
                         angular.element( document.querySelector( "#search-panel-input")).show();
-                        angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active-smdev");
-                        angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active-lgdev");
+                        angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active-xs");
+                        angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active-default");
 
                     }
                     else
                     {
                         angular.element( document.querySelector( "#search-panel-input")).hide();
-                        angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active-lgdev");
-                        angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active-smdev");
+                        angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active-default");
+                        angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active-xs");
                     }
                 }
                 else

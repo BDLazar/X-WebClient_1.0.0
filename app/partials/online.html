@@ -9,20 +9,28 @@
             <span class="icon-bar"></span>
         </a>
         <a id="logo" class="navbar-brand" href="#">BRND</a>
-        <div id="search-bar" class="col-xs-3">
+        <div id="search-bar" class="col-sm-3">
             <input id="search-input" type="search" class="form-control input-sm" placeholder="Search" data-ng-model="searchString" data-ng-click="activateSearch()"/>
         </div>
 
         <a id="right-sidebar-toggle" data-ng-click="toggleRSB()">
             <span class="sr-only">Toggle navigation</span>
-            <span class="glyphicon glyphicon-globe"></span>
+            <span class="glyphicon glyphicon-user"></span>
+        </a>
+        <a id="top-bar-mail-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="glyphicon glyphicon-envelope"></span>
+        </a>
+        <a id="top-bar-home-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="glyphicon glyphicon-home"></span>
         </a>
         <a id="top-bar-search-toggle" data-ng-click="activateSearch()">
             <span class="sr-only">Toggle navigation</span>
             <span class="glyphicon glyphicon-search"></span>
         </a>
     </nav>
-    <div id="GUI-middle">
+    <div id="page-instance">
         <!-- Left Sidebar -->
         <div id="left-side-bar">
 
