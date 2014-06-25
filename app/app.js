@@ -380,6 +380,7 @@ var GUI = angular.module('GUI',[])
             SearchPanelService.handleElements(device);
             RightSideBarService.handleElements(device);
             LeftSideBarService.handleElements(device);
+            CenterContentService.handleElements(device);
 
 
         };
@@ -389,6 +390,7 @@ var GUI = angular.module('GUI',[])
             SearchPanelService.handleElements(device);
             RightSideBarService.handleElements(device);
             LeftSideBarService.handleElements(device);
+            CenterContentService.handleElements(device);
         });
     }])
     .service('GUIService',['$rootScope','$window',
@@ -425,19 +427,65 @@ var GUI = angular.module('GUI',[])
                 if(device == 'mobile')
                 {
                     angular.element( document.querySelector( "#top-bar-search-toggle")).show();
-                    angular.element( document.querySelector( "#search-bar")).hide();
+                    angular.element( document.querySelector( "#tb-search-bar")).hide();
+
+                    angular.element( document.querySelector( "#rsb-toggle-xs")).show();
+                    angular.element( document.querySelector( "#rsb-toggle-default")).hide();
+
+                    angular.element( document.querySelector( "#tb-user-name")).hide();
+
+                    angular.element( document.querySelector( "#tb-user-info")).addClass("col-xs-3");
+                    angular.element( document.querySelector( "#top-bar-mail-toggle")).removeClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-home-toggle")).removeClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).removeClass("fixed-width");
+
+                    angular.element( document.querySelector( "#tb-left")).addClass("xs");
+                    angular.element( document.querySelector( "#lsb-toggle")).addClass("xs");
+                    angular.element( document.querySelector( "#tb-logo")).addClass("xs");
+
+
+
+
                 }
                 //we are on a tablet screen
                 else if(device == 'tablet')
                 {
                     angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
-                    angular.element( document.querySelector( "#search-bar")).show();
+                    angular.element( document.querySelector( "#tb-search-bar")).show();
+
+                    angular.element( document.querySelector( "#rsb-toggle-xs")).hide();
+                    angular.element( document.querySelector( "#rsb-toggle-default")).show();
+
+                    angular.element( document.querySelector( "#tb-user-name")).hide();
+
+                    angular.element( document.querySelector( "#tb-user-info")).removeClass("col-xs-3");
+                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("fixed-width");
+
+                    angular.element( document.querySelector( "#tb-left")).removeClass("xs");
+                    angular.element( document.querySelector( "#lsb-toggle")).removeClass("xs");
+                    angular.element( document.querySelector( "#tb-logo")).removeClass("xs");
                 }
                 //we are on a desktop or large device screen
                 else if(device == 'desktop' || device== 'large')
                 {
                     angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
-                    angular.element( document.querySelector( "#search-bar")).show();
+                    angular.element( document.querySelector( "#tb-search-bar")).show();
+
+                    angular.element( document.querySelector( "#rsb-toggle-xs")).hide();
+                    angular.element( document.querySelector( "#rsb-toggle-default")).show();
+
+                    angular.element( document.querySelector( "#tb-user-name")).show();
+
+                    angular.element( document.querySelector( "#tb-user-info")).removeClass("col-xs-3");
+                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("fixed-width");
+
+                    angular.element( document.querySelector( "#tb-left")).removeClass("xs");
+                    angular.element( document.querySelector( "#lsb-toggle")).removeClass("xs");
+                    angular.element( document.querySelector( "#tb-logo")).removeClass("xs");
                 }
             }
 
@@ -609,6 +657,18 @@ var GUI = angular.module('GUI',[])
     .service('CenterContentService',['$rootScope','$window',
         function ($rootScope) {
 
+            this.handleElements= function(device)
+            {
+                switch(device)
+                {
+                    case 'mobile':
+                        angular.element( document.querySelector( "#page-instance")).addClass("xs");
+                        break;
+                    default:
+                        angular.element( document.querySelector( "#page-instance")).removeClass("xs");
+                        break;
+                }
+            }
 
         }])
     .service('SearchPanelService',['$rootScope','$window',
@@ -647,7 +707,6 @@ var GUI = angular.module('GUI',[])
                         angular.element( document.querySelector( "#search-panel-input")).show();
                         angular.element( document.querySelector( "#search-panel")).addClass("search-panel-active-xs");
                         angular.element( document.querySelector( "#search-panel")).removeClass("search-panel-active-default");
-
                     }
                     else
                     {

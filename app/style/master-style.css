@@ -2,22 +2,27 @@
 
 /*===============TOP BAR==============*/
 #top-bar{
-    height: 50px !important;
+    min-height: 50px;
+    max-height: 100px;
     display: block !important;
     padding:0;
 }
-#left-sidebar-toggle {
+#tb-left.xs{
+    background-color: #333333;
+}
+
+.left-sidebar-toggle {
+    display: block;
     float: left;
-    height:100%;
+    height:50px;
     width: 50px;
     padding: 0px;
     margin: 0px;
-
 }
-#left-sidebar-toggle:hover  {
+.left-sidebar-toggle:hover  {
     background: #eeeeee !important;
 }
-#left-sidebar-toggle .icon-bar {
+.left-sidebar-toggle .icon-bar {
     display: block;
     width: 22px;
     height: 2px;
@@ -25,54 +30,107 @@
     margin-left:14px;
     margin-top: 17px;
 }
-#left-sidebar-toggle .icon-bar + .icon-bar {
+.left-sidebar-toggle .icon-bar + .icon-bar {
     margin-top: 4px;
 }
-#logo{
+.left-sidebar-toggle.xs:hover  {
+    background: #444 !important;
+}
+.left-sidebar-toggle.xs .icon-bar {
+    background: #eeeeee;
+}
+
+#tb-logo{
     float:left;
     color: #333333 ;
 }
-#search-bar{
+#tb-logo.xs{
+    color: #eeeeee;
+}
+
+#tb-search-bar{
     margin-top:10px;
 }
-#right-sidebar-toggle {
-
-    float: right;
-    height:100%;
-    width: 50px;
-    padding: 0px;
-    margin: 0px;
-    color: #333333;
-}
-#right-sidebar-toggle:hover  {
-    background: #eeeeee !important;
-}
-#right-sidebar-toggle .glyphicon {
-
-    margin-left:19px;
-    margin-top: 16px;
-}
-
 #top-bar-search-toggle{
+    display: block;
     float: right;
-    height:100%;
+    height:50px;
     width: 50px;
     padding: 0px;
     margin: 0px;
-    color: #333333;
+    color: #eeeeee;
 }
 #top-bar-search-toggle:hover{
-    background: #eeeeee !important;
+    background: #444 !important;
 }
 #top-bar-search-toggle .glyphicon{
     margin-left:19px;
     margin-top: 16px;
 }
 
+
+#top-bar-mail-toggle.fixed-width,
+#top-bar-home-toggle.fixed-width,
+#top-bar-notifications-toggle.fixed-width
+{
+    width: 50px;
+}
+
+#tb-user-info{
+    float: left;
+}
+#tb-user-info:hover{
+    background: #eeeeee !important;
+}
+#tb-user-info p{
+    float: right;
+    margin-left:0px;
+    margin-right: 9px;
+
+}
+#tb-user-info img{
+    float: left;
+    margin:9px 9px 9px 9px;
+    height: 32px;
+    width: 32px;
+}
+
+.right-sidebar-toggle {
+    display: block;
+    float: right;
+    height:50px;
+    width: 50px;
+    padding: 0px;
+    margin: 0px;
+
+}
+.right-sidebar-toggle:hover  {
+    background: #eeeeee !important;
+}
+.right-sidebar-toggle .icon-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #333333;
+    margin-left:14px;
+    margin-top: 17px;
+}
+.right-sidebar-toggle .icon-bar + .icon-bar {
+    margin-top: 4px;
+}
+#rsb-toggle-xs:hover  {
+    background: #444 !important;
+}
+#rsb-toggle-xs .icon-bar {
+    background: #eeeeee;
+}
+
+
+
 #top-bar-mail-toggle{
-     float: right;
-     height:100%;
-     width: 50px;
+     float:left;
+     display: block;
+     height:50px;
      padding: 0px;
      margin: 0px;
      color: #333333;
@@ -86,9 +144,9 @@
 }
 
 #top-bar-home-toggle{
-    float: right;
-    height:100%;
-    width: 50px;
+    display: block;
+    float: left;
+    height:50px;
     padding: 0px;
     margin: 0px;
     color: #333333;
@@ -101,9 +159,26 @@
     margin-top: 16px;
 }
 
+#top-bar-notifications-toggle{
+    display: block;
+    float: left;
+    height:50px;
+    padding: 0px;
+    margin: 0px;
+    color: #333333;
+}
+#top-bar-notifications-toggle:hover{
+    background: #eeeeee !important;
+}
+#top-bar-notifications-toggle .glyphicon{
+    margin-left:19px;
+    margin-top: 16px;
+}
+
 #top-bar-login-btn{
+    display: block;
     float:right;
-    height: 100%;
+    height: 50px;
     color: #333333;
     padding:13px;
     cursor:context-menu;
@@ -152,6 +227,9 @@
     height: 100%;
     padding-top: 50px;
     transition: all .6s ease 0s;
+}
+#page-instance.xs{
+    padding-top: 100px;
 }
 #page-instance.lsb-active-xs {
     padding-left: 100%;
@@ -292,4 +370,20 @@
 }
 #authentication .modal-footer{
     border-top: none;
+}
+
+
+/*==================================== Twitter Bootstrap Overrides ==================================*/
+/* remove spacing between middle columns */
+.row.no-gutter [class*='col-']:not(:first-child):not(:last-child) {
+    padding-right:0;
+    padding-left:0;
+}
+/* remove right padding from first column */
+.row.no-gutter [class*='col-']:first-child {
+    padding-right:0;
+}
+/* remove left padding from first column */
+.row.no-gutter [class*='col-']:last-child {
+    padding-left:0;
 }
