@@ -48,6 +48,25 @@
     color: #eeeeee;
 }
 
+#tb-user-info{
+    float: right;
+}
+#tb-user-info:hover{
+    background: #eeeeee !important;
+}
+#tb-user-info p{
+    float: right;
+    margin-left:0px;
+    margin-right: 9px;
+
+}
+#tb-user-info img{
+    float: left;
+    margin:9px 9px 9px 9px;
+    height: 32px;
+    width: 32px;
+}
+
 #tb-search-bar{
     margin-top:10px;
 }
@@ -71,29 +90,12 @@
 
 #top-bar-mail-toggle.fixed-width,
 #top-bar-home-toggle.fixed-width,
-#top-bar-notifications-toggle.fixed-width
-{
+#top-bar-notifications-toggle.fixed-width,
+#top-bar-tasks-toggle.fixed-width{
     width: 50px;
 }
 
-#tb-user-info{
-    float: left;
-}
-#tb-user-info:hover{
-    background: #eeeeee !important;
-}
-#tb-user-info p{
-    float: right;
-    margin-left:0px;
-    margin-right: 9px;
 
-}
-#tb-user-info img{
-    float: left;
-    margin:9px 9px 9px 9px;
-    height: 32px;
-    width: 32px;
-}
 
 .right-sidebar-toggle {
     display: block;
@@ -134,12 +136,13 @@
      padding: 0px;
      margin: 0px;
      color: #333333;
+    text-align: center;
  }
 #top-bar-mail-toggle:hover{
     background: #eeeeee !important;
 }
 #top-bar-mail-toggle .glyphicon{
-    margin-left:19px;
+
     margin-top: 16px;
 }
 
@@ -150,12 +153,12 @@
     padding: 0px;
     margin: 0px;
     color: #333333;
+    text-align: center;
 }
 #top-bar-home-toggle:hover{
     background: #eeeeee !important;
 }
 #top-bar-home-toggle .glyphicon{
-    margin-left:19px;
     margin-top: 16px;
 }
 
@@ -166,12 +169,29 @@
     padding: 0px;
     margin: 0px;
     color: #333333;
+    text-align: center;
 }
 #top-bar-notifications-toggle:hover{
     background: #eeeeee !important;
 }
 #top-bar-notifications-toggle .glyphicon{
-    margin-left:19px;
+
+    margin-top: 16px;
+}
+
+#top-bar-tasks-toggle{
+    display: block;
+    float: left;
+    height:50px;
+    padding: 0px;
+    margin: 0px;
+    color: #333333;
+    text-align: center;
+}
+#top-bar-tasks-toggle:hover{
+    background: #eeeeee !important;
+}
+#top-bar-tasks-toggle .glyphicon{
     margin-top: 16px;
 }
 
@@ -373,17 +393,4 @@
 }
 
 
-/*==================================== Twitter Bootstrap Overrides ==================================*/
-/* remove spacing between middle columns */
-.row.no-gutter [class*='col-']:not(:first-child):not(:last-child) {
-    padding-right:0;
-    padding-left:0;
-}
-/* remove right padding from first column */
-.row.no-gutter [class*='col-']:first-child {
-    padding-right:0;
-}
-/* remove left padding from first column */
-.row.no-gutter [class*='col-']:last-child {
-    padding-left:0;
-}
+

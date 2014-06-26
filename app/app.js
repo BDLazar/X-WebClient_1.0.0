@@ -434,10 +434,10 @@ var GUI = angular.module('GUI',[])
 
                     angular.element( document.querySelector( "#tb-user-name")).hide();
 
-                    angular.element( document.querySelector( "#tb-user-info")).addClass("col-xs-3");
                     angular.element( document.querySelector( "#top-bar-mail-toggle")).removeClass("fixed-width");
                     angular.element( document.querySelector( "#top-bar-home-toggle")).removeClass("fixed-width");
                     angular.element( document.querySelector( "#top-bar-notifications-toggle")).removeClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).removeClass("fixed-width");
 
                     angular.element( document.querySelector( "#tb-left")).addClass("xs");
                     angular.element( document.querySelector( "#lsb-toggle")).addClass("xs");
@@ -458,10 +458,10 @@ var GUI = angular.module('GUI',[])
 
                     angular.element( document.querySelector( "#tb-user-name")).hide();
 
-                    angular.element( document.querySelector( "#tb-user-info")).removeClass("col-xs-3");
                     angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("fixed-width");
                     angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("fixed-width");
                     angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("fixed-width");
 
                     angular.element( document.querySelector( "#tb-left")).removeClass("xs");
                     angular.element( document.querySelector( "#lsb-toggle")).removeClass("xs");
@@ -478,10 +478,10 @@ var GUI = angular.module('GUI',[])
 
                     angular.element( document.querySelector( "#tb-user-name")).show();
 
-                    angular.element( document.querySelector( "#tb-user-info")).removeClass("col-xs-3");
                     angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("fixed-width");
                     angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("fixed-width");
                     angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("fixed-width");
 
                     angular.element( document.querySelector( "#tb-left")).removeClass("xs");
                     angular.element( document.querySelector( "#lsb-toggle")).removeClass("xs");
