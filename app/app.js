@@ -342,8 +342,8 @@ var GUI = angular.module('GUI',[])
                 {
                     LeftSideBarService.deactivateLSB();
                 }
-
-                BottomBarService.activateBB();
+                var device = GUIService.getDevice();
+                BottomBarService.activateBB(device);
             }
 
         }
@@ -381,8 +381,7 @@ var GUI = angular.module('GUI',[])
             RightSideBarService.handleElements(device);
             LeftSideBarService.handleElements(device);
             CenterContentService.handleElements(device);
-
-
+            BottomBarService.handleElements(device);
         };
         $scope.$on('$viewContentLoaded',function(){
             var device =  GUIService.getDevice();
@@ -391,6 +390,7 @@ var GUI = angular.module('GUI',[])
             RightSideBarService.handleElements(device);
             LeftSideBarService.handleElements(device);
             CenterContentService.handleElements(device);
+            BottomBarService.handleElements(device);
         });
     }])
     .service('GUIService',['$rootScope','$window',
@@ -434,16 +434,17 @@ var GUI = angular.module('GUI',[])
 
                     angular.element( document.querySelector( "#tb-user-name")).hide();
 
-                    angular.element( document.querySelector( "#top-bar-mail-toggle")).removeClass("fixed-width");
-                    angular.element( document.querySelector( "#top-bar-home-toggle")).removeClass("fixed-width");
-                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).removeClass("fixed-width");
-                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).removeClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-mail-toggle")).removeClass("default");
+                    angular.element( document.querySelector( "#top-bar-home-toggle")).removeClass("default");
+                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).removeClass("default");
+                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).removeClass("default");
 
-                    angular.element( document.querySelector( "#tb-left")).addClass("xs");
-                    angular.element( document.querySelector( "#lsb-toggle")).addClass("xs");
-                    angular.element( document.querySelector( "#tb-logo")).addClass("xs");
+                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("xs");
+                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("xs");
+                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("xs");
+                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("xs");
 
-
+                    angular.element( document.querySelector( "#tb-right")).addClass("xs");
 
 
                 }
@@ -458,14 +459,18 @@ var GUI = angular.module('GUI',[])
 
                     angular.element( document.querySelector( "#tb-user-name")).hide();
 
-                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("fixed-width");
-                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("fixed-width");
-                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("fixed-width");
-                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-mail-toggle")).removeClass("xs");
+                    angular.element( document.querySelector( "#top-bar-home-toggle")).removeClass("xs");
+                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).removeClass("xs");
+                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).removeClass("xs");
 
-                    angular.element( document.querySelector( "#tb-left")).removeClass("xs");
-                    angular.element( document.querySelector( "#lsb-toggle")).removeClass("xs");
-                    angular.element( document.querySelector( "#tb-logo")).removeClass("xs");
+                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("default");
+                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("default");
+                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("default");
+                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("default");
+
+                    angular.element( document.querySelector( "#tb-right")).removeClass("xs");
+
                 }
                 //we are on a desktop or large device screen
                 else if(device == 'desktop' || device== 'large')
@@ -478,14 +483,18 @@ var GUI = angular.module('GUI',[])
 
                     angular.element( document.querySelector( "#tb-user-name")).show();
 
-                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("fixed-width");
-                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("fixed-width");
-                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("fixed-width");
-                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("fixed-width");
+                    angular.element( document.querySelector( "#top-bar-mail-toggle")).removeClass("xs");
+                    angular.element( document.querySelector( "#top-bar-home-toggle")).removeClass("xs");
+                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).removeClass("xs");
+                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).removeClass("xs");
 
-                    angular.element( document.querySelector( "#tb-left")).removeClass("xs");
-                    angular.element( document.querySelector( "#lsb-toggle")).removeClass("xs");
-                    angular.element( document.querySelector( "#tb-logo")).removeClass("xs");
+                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("default");
+                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("default");
+                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("default");
+                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("default");
+
+                    angular.element( document.querySelector( "#tb-right")).removeClass("xs");
+
                 }
             }
 
@@ -646,15 +655,48 @@ var GUI = angular.module('GUI',[])
                 }
             }
         }])
-    .service('BottomBarService',['$rootScope','$window',
+    .service('BottomBarService',['$rootScope',
         function ($rootScope) {
 
-            this.activateBB =  function(){angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active");}
-            this.deactivateBB =  function(){angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active");}
-            this.isBBActive =  function(){return angular.element( document.querySelector( "#bottom-bar")).hasClass("bottom-bar-active");}
+            this.activateBB =  function(device){
+
+                switch(device)
+                {
+                    case 'mobile':
+                        angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active-xs");
+                        break;
+                    default :
+                        angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active-default");
+                        break;
+                }
+
+            }
+            this.deactivateBB =  function(){
+                angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active-xs");
+                angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active-default");
+            }
+            this.isBBActive =  function(){
+                return angular.element( document.querySelector( "#bottom-bar")).hasClass("bottom-bar-active-xs") || angular.element( document.querySelector( "#bottom-bar")).hasClass("bottom-bar-active-default");
+            }
+            this.handleElements = function(device){
+
+                if(this.isBBActive())
+                {
+                    if(device == 'mobile')
+                    {
+                        angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active-xs");
+                        angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active-default");
+                    }
+                    else
+                    {
+                        angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active-default");
+                        angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active-xs");
+                    }
+                }
+            }
 
         }])
-    .service('CenterContentService',['$rootScope','$window',
+    .service('CenterContentService',['$rootScope',
         function ($rootScope) {
 
             this.handleElements= function(device)
@@ -671,7 +713,7 @@ var GUI = angular.module('GUI',[])
             }
 
         }])
-    .service('SearchPanelService',['$rootScope','$window',
+    .service('SearchPanelService',['$rootScope',
         function ($rootScope) {
 
             this.activateSearchPanel = function(device){
@@ -773,6 +815,7 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
             if(data.loginResponseType == 'LOGIN_SUCCESS')
             {
                 AuthenticationService.createUserSession(data.loginID, data.token);
+                $rootScope.userID = data.loginID;
 
                 $rootScope.$broadcast('LOGIN_SUCCESS', data);
             }
@@ -874,6 +917,8 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
             $rootScope.$broadcast('LOGOUT_SUCCESS');
         };
 
+
+
     }])
     .service('AuthenticationService',['$rootScope','$cookieStore','RestService',
         function ($rootScope,$cookieStore,RestService) {
@@ -881,7 +926,6 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
         this.createUserSession = function(loginID,token){
             $cookieStore.put('token',token);
             $cookieStore.put('loginID',loginID);
-
         };
         this.getUserSession = function(){
 

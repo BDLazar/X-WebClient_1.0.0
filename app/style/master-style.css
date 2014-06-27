@@ -1,14 +1,17 @@
 /*===================================================== GENERAL GUI =================================================================*/
-
+body{background-color:#f8f8f8; }
 /*===============TOP BAR==============*/
 #top-bar{
     min-height: 50px;
     max-height: 100px;
-    display: block !important;
+    display: block;
     padding:0;
+    margin: 0;
+    background-color: #222326;
 }
-#tb-left.xs{
-    background-color: #333333;
+#tb-right.xs{
+    background-color: #ffffff;
+    border-bottom: 1px solid #efefef;
 }
 
 .left-sidebar-toggle {
@@ -18,47 +21,58 @@
     width: 50px;
     padding: 0px;
     margin: 0px;
+    color:#949599;
 }
-.left-sidebar-toggle:hover  {
-    background: #eeeeee !important;
+.left-sidebar-toggle:hover .icon-bar {
+    background: #ffffff;
+
 }
 .left-sidebar-toggle .icon-bar {
     display: block;
     width: 22px;
     height: 2px;
-    background: #333333;
+    background: #949599;
     margin-left:14px;
     margin-top: 17px;
+    -webkit-transition-duration: 0.3s;
+    -webkit-transition-timing: ease-out;
+    -o-transition-duration: 0.3s;
+    -o-transition-timing: ease-out;
+    -moz-transition-duration: 0.3s;
+    -moz-transition-timing: ease-out;
+    -ms-transition-duration: 0.3s;
+    -ms-transition-timing: ease-out;
+    transition-duration: 0.3s;
+    transition-timing: ease-out;
 }
 .left-sidebar-toggle .icon-bar + .icon-bar {
     margin-top: 4px;
 }
-.left-sidebar-toggle.xs:hover  {
-    background: #444 !important;
-}
-.left-sidebar-toggle.xs .icon-bar {
-    background: #eeeeee;
-}
 
 #tb-logo{
     float:left;
-    color: #333333 ;
-}
-#tb-logo.xs{
-    color: #eeeeee;
+    color:#ffffff;
+    margin-left: 15px;
+    margin-right: 20px;
 }
 
 #tb-user-info{
     float: right;
+    color: #eeeeee;
 }
 #tb-user-info:hover{
-    background: #eeeeee !important;
+    background: #ffffff !important;
+    color: #222326;
 }
 #tb-user-info p{
     float: right;
     margin-left:0px;
     margin-right: 9px;
-
+    cursor:context-menu;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 #tb-user-info img{
     float: left;
@@ -77,25 +91,41 @@
     width: 50px;
     padding: 0px;
     margin: 0px;
-    color: #eeeeee;
+    color: #949599;
+    -webkit-transition-duration: 0.3s;
+    -webkit-transition-timing: ease-out;
+    -o-transition-duration: 0.3s;
+    -o-transition-timing: ease-out;
+    -moz-transition-duration: 0.3s;
+    -moz-transition-timing: ease-out;
+    -ms-transition-duration: 0.3s;
+    -ms-transition-timing: ease-out;
+    transition-duration: 0.3s;
+    transition-timing: ease-out;
 }
 #top-bar-search-toggle:hover{
-    background: #444 !important;
+    color: #ffffff;
 }
 #top-bar-search-toggle .glyphicon{
     margin-left:19px;
     margin-top: 16px;
 }
 
-
-#top-bar-mail-toggle.fixed-width,
-#top-bar-home-toggle.fixed-width,
-#top-bar-notifications-toggle.fixed-width,
-#top-bar-tasks-toggle.fixed-width{
+#top-bar-mail-toggle.default,
+#top-bar-home-toggle.default,
+#top-bar-notifications-toggle.default,
+#top-bar-tasks-toggle.default{
     width: 50px;
+    color:#949599;
 }
 
-
+#top-bar-mail-toggle.xs,
+#top-bar-home-toggle.xs,
+#top-bar-notifications-toggle.xs,
+#top-bar-tasks-toggle.xs{
+    width: 25%;
+    color: #222326;
+}
 
 .right-sidebar-toggle {
     display: block;
@@ -106,28 +136,30 @@
     margin: 0px;
 
 }
-.right-sidebar-toggle:hover  {
-    background: #eeeeee !important;
+.right-sidebar-toggle:hover .icon-bar {
+    background: #ffffff;
 }
 .right-sidebar-toggle .icon-bar {
     display: block;
     width: 22px;
     height: 2px;
-    background: #333333;
+    background: #949599;
     margin-left:14px;
     margin-top: 17px;
+    -webkit-transition-duration: 0.3s;
+    -webkit-transition-timing: ease-out;
+    -o-transition-duration: 0.3s;
+    -o-transition-timing: ease-out;
+    -moz-transition-duration: 0.3s;
+    -moz-transition-timing: ease-out;
+    -ms-transition-duration: 0.3s;
+    -ms-transition-timing: ease-out;
+    transition-duration: 0.3s;
+    transition-timing: ease-out;
 }
 .right-sidebar-toggle .icon-bar + .icon-bar {
     margin-top: 4px;
 }
-#rsb-toggle-xs:hover  {
-    background: #444 !important;
-}
-#rsb-toggle-xs .icon-bar {
-    background: #eeeeee;
-}
-
-
 
 #top-bar-mail-toggle{
      float:left;
@@ -135,11 +167,13 @@
      height:50px;
      padding: 0px;
      margin: 0px;
-     color: #333333;
-    text-align: center;
+     text-align: center;
  }
-#top-bar-mail-toggle:hover{
-    background: #eeeeee !important;
+#top-bar-mail-toggle.default:hover{
+    color: #ffffff;
+}
+#top-bar-mail-toggle.xs:hover{
+    background-color: #eeeeee;
 }
 #top-bar-mail-toggle .glyphicon{
 
@@ -152,11 +186,14 @@
     height:50px;
     padding: 0px;
     margin: 0px;
-    color: #333333;
+    color: #949599;
     text-align: center;
 }
-#top-bar-home-toggle:hover{
-    background: #eeeeee !important;
+#top-bar-home-toggle.default:hover{
+    color: #ffffff;
+}
+#top-bar-home-toggle.xs:hover{
+    background-color: #eeeeee;
 }
 #top-bar-home-toggle .glyphicon{
     margin-top: 16px;
@@ -168,12 +205,16 @@
     height:50px;
     padding: 0px;
     margin: 0px;
-    color: #333333;
+    color: #949599;
     text-align: center;
 }
-#top-bar-notifications-toggle:hover{
-    background: #eeeeee !important;
+#top-bar-notifications-toggle.default:hover{
+    color: #ffffff;
 }
+#top-bar-notifications-toggle.xs:hover{
+    background-color: #eeeeee;
+}
+
 #top-bar-notifications-toggle .glyphicon{
 
     margin-top: 16px;
@@ -185,11 +226,14 @@
     height:50px;
     padding: 0px;
     margin: 0px;
-    color: #333333;
+    color: #949599;
     text-align: center;
 }
-#top-bar-tasks-toggle:hover{
-    background: #eeeeee !important;
+#top-bar-tasks-toggle.default:hover{
+    color: #ffffff;
+}
+#top-bar-tasks-toggle.xs:hover{
+    background-color: #eeeeee;
 }
 #top-bar-tasks-toggle .glyphicon{
     margin-top: 16px;
@@ -199,25 +243,36 @@
     display: block;
     float:right;
     height: 50px;
-    color: #333333;
+    color: #949599;
     padding:13px;
     cursor:context-menu;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    -webkit-transition-duration: 0.3s;
+    -webkit-transition-timing: ease-out;
+    -o-transition-duration: 0.3s;
+    -o-transition-timing: ease-out;
+    -moz-transition-duration: 0.3s;
+    -moz-transition-timing: ease-out;
+    -ms-transition-duration: 0.3s;
+    -ms-transition-timing: ease-out;
+    transition-duration: 0.3s;
+    transition-timing: ease-out;
 
 }
 #top-bar-login-btn:hover{
 
-    background: #eeeeee !important;
+    color: #ffffff;
     text-decoration: none;
 }
 
 /*===============SEARCH PANEL===========*/
 #search-panel{
     transition: all .4s ease 0s;
-    background-color: #333;
+    background-color: #222326;
+    border-top: 1px solid #333333;
     position:fixed;
     width: 100%;
     bottom:-100%;
@@ -281,10 +336,11 @@
 
 /*===============LEFT SIDE BAR===========*/
 #left-side-bar {
-    background-color: #333;
+    background-color: #222326;
+    border-top: 1px solid #333333;
     position: fixed;
     height: 100%;
-    transition: all 0.6s ease 0s;
+    transition: all .6s ease 0s;
 }
 #left-side-bar.xs{
     left: -100%;
@@ -318,7 +374,8 @@
 
 /*===============RIGHT SIDE BAR===========*/
 #right-side-bar {
-    background-color: #333;
+    background-color: #222326;
+    border-top: 1px solid #333333;
     position: fixed;
     height: 100%;
     transition: all .6s ease 0s;
@@ -355,16 +412,23 @@
 
 /*===============BOTTOM BAR============*/
 #bottom-bar{
-
-    bottom: -280px;
-    min-height: 300px;
-    border-top: 1px solid #e7e7e7;
-    transition: all 0.6s ease 0s;
+    transition: all .4s ease 0s;
+    background-color: #222326;
+    border-top: 1px solid #333333;
+    position:fixed;
+    width: 100%;
+    bottom:-100%;
+    top:100%;
+    z-index: 999999;
 }
-#bottom-bar.bottom-bar-active{
-    bottom: 0px;
+#bottom-bar.bottom-bar-active-xs{
+    top:100px;
+    bottom:0px;
 }
-
+#bottom-bar.bottom-bar-active-default{
+    top:50px;
+    bottom:0px;
+}
 
 
 

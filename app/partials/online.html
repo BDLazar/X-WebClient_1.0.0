@@ -1,7 +1,7 @@
 <div data-ng-controller="GUICtrl">
 
     <!--Top bar-->
-    <nav id="top-bar" class="row navbar navbar-fixed-top navbar-default container-fluid">
+    <nav id="top-bar" class="row navbar-fixed-top container-fluid">
             <div id="tb-left" class="col-xs-12 col-sm-8">
                 <a id="lsb-toggle" class="left-sidebar-toggle" data-ng-click="toggleLSB()">
                     <span class="sr-only">Toggle navigation</span>
@@ -23,9 +23,9 @@
                     <span class="sr-only">Toggle navigation</span>
                     <span class="glyphicon glyphicon-search"></span>
                 </a>
-                <div id="tb-user-info" class="">
+                <div id="tb-user-info" data-ng-click="toggleBB()">
                     <img src="app/images/userImage.png" class="img-circle"/>
-                    <p id="tb-user-name" class="navbar-text">User Name</p>
+                    <p id="tb-user-name" class="navbar-text">{{userID}}</p>
                 </div>
             </div>
             <div id="tb-right" class="col-xs-12 col-sm-4">
@@ -36,24 +36,24 @@
                     <span class="icon-bar"></span>
                 </a>
 
-                <div id="tb-user-controls" class="row">
-                    <div id="top-bar-mail-toggle" class="col-xs-3">
+                <div id="tb-user-controls">
+                    <div id="top-bar-mail-toggle">
                             <span class="sr-only">Toggle navigation</span>
                             <span class="glyphicon glyphicon-envelope"></span>
                     </div>
-                    <div id="top-bar-home-toggle" class="col-xs-3">
+                    <div id="top-bar-home-toggle">
 
                             <span class="sr-only">Toggle navigation</span>
                             <span class="glyphicon glyphicon-home"></span>
 
                     </div>
-                    <div id="top-bar-notifications-toggle" class="col-xs-3">
+                    <div id="top-bar-notifications-toggle">
 
                         <span class="sr-only">Toggle navigation</span>
                         <span class="glyphicon glyphicon-bell"></span>
 
                     </div>
-                    <div id="top-bar-tasks-toggle" class="col-xs-3">
+                    <div id="top-bar-tasks-toggle">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="glyphicon glyphicon-tasks"></span>
                     </div>
@@ -77,7 +77,7 @@
         </div>
     </div>
     <!--Bottom Bar-->
-    <nav id="bottom-bar" class="navbar-fixed-bottom navbar-default container-fluid" role="navigation" data-ng-click="toggleBB()"></nav>
+    <div id="bottom-bar"></div>
     <!--Search panel-->
     <div id="search-panel">
         <div id="search-controls">
