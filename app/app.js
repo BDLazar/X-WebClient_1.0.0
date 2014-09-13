@@ -98,21 +98,25 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
                         }
                         else
                         {
-                            AuthenticationService.validateUserSession();
-
-                            $timeout(function () {
-
-                                if(AuthenticationService.isUserSessionAlive() == true)
+                            var serverResponsePromise = AuthenticationService.validateUserSession();
+                            serverResponsePromise.then
+                            (
+                                function(response)
                                 {
-                                    defer.resolve();
-                                }
-                                else
+                                    if(response.data.validateSessionResponseType == "USER_SESSION_VALID")
+                                    {
+                                        defer.resolve();
+                                    }
+                                    else
+                                    {
+                                        defer.reject();
+                                    }
+                                },
+                                function(responseError)
                                 {
-                                    alert('Validate User Session Timeout!');
                                     defer.reject();
                                 }
-
-                            }, 2000);
+                            );
                         }
 
                         return defer.promise;
@@ -232,7 +236,7 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
 
             $scope.$on('$stateChangeError',function(event, toState, toParams, fromState, fromParams){
 
-                if(toState.name == 'online')
+                if(toState.name == 'online' || toState.name == 'online.userProfile' || toState.name == 'online.newsFeed')
                 {
                     $state.transitionTo('authentication');
                 }
@@ -242,7 +246,7 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
                     event.preventDefault;
                     if(fromState.name == null || fromState.name == '')
                     {
-                        $state.transitionTo('online.userProfile');
+                        $state.transitionTo('online');
                     }
                 }
 
@@ -272,6 +276,10 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
 var GUI = angular.module('GUI',[])
     .controller('GUICtrl',[ '$rootScope','$scope','$state','$window','GUIService','TopBarService','LeftSideBarService','RightSideBarService','BottomBarService','CenterContentService','SearchPanelService',
         function ($rootScope,$scope,$state,$window,GUIService,TopBarService,LeftSideBarService,RightSideBarService,BottomBarService,CenterContentService,SearchPanelService) {
+
+        $scope.device = function(){
+            return GUIService.getDevice();
+        }
 
         $scope.toggleLSB = function(){
 
@@ -307,9 +315,10 @@ var GUI = angular.module('GUI',[])
                 RightSideBarService.deactivateRSB();
             }
             else
+            {
                 var device = GUIService.getDevice();
 
-            {   if(SearchPanelService.isSearchPanelActive())
+               if(SearchPanelService.isSearchPanelActive())
                 {
                     SearchPanelService.deactivateSearchPanel();
                 }
@@ -418,8 +427,8 @@ var GUI = angular.module('GUI',[])
             }
 
         }])
-    .service('TopBarService',['$rootScope',
-        function ($rootScope) {
+    .service('TopBarService',['$rootScope','$window',
+        function ($rootScope,$window) {
 
             this.handleElements = function(device){
 
@@ -434,18 +443,11 @@ var GUI = angular.module('GUI',[])
 
                     angular.element( document.querySelector( "#tb-user-name")).hide();
 
-                    angular.element( document.querySelector( "#top-bar-mail-toggle")).removeClass("default");
-                    angular.element( document.querySelector( "#top-bar-home-toggle")).removeClass("default");
-                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).removeClass("default");
-                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).removeClass("default");
-
-                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("xs");
-                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("xs");
-                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("xs");
-                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("xs");
+                    angular.element( document.querySelector( "#tb-right-buttons")).removeClass("default");
+                    angular.element( document.querySelector( "#tb-right-buttons")).addClass("xs");
 
                     angular.element( document.querySelector( "#tb-right")).addClass("xs");
-
+                    angular.element( document.querySelector( "#tb-left")).addClass("xs");
 
                 }
                 //we are on a tablet screen
@@ -459,17 +461,11 @@ var GUI = angular.module('GUI',[])
 
                     angular.element( document.querySelector( "#tb-user-name")).hide();
 
-                    angular.element( document.querySelector( "#top-bar-mail-toggle")).removeClass("xs");
-                    angular.element( document.querySelector( "#top-bar-home-toggle")).removeClass("xs");
-                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).removeClass("xs");
-                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).removeClass("xs");
-
-                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("default");
-                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("default");
-                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("default");
-                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("default");
+                    angular.element( document.querySelector( "#tb-right-buttons")).removeClass("xs");
+                    angular.element( document.querySelector( "#tb-right-buttons")).addClass("default");
 
                     angular.element( document.querySelector( "#tb-right")).removeClass("xs");
+                    angular.element( document.querySelector( "#tb-left")).removeClass("xs");
 
                 }
                 //we are on a desktop or large device screen
@@ -483,17 +479,11 @@ var GUI = angular.module('GUI',[])
 
                     angular.element( document.querySelector( "#tb-user-name")).show();
 
-                    angular.element( document.querySelector( "#top-bar-mail-toggle")).removeClass("xs");
-                    angular.element( document.querySelector( "#top-bar-home-toggle")).removeClass("xs");
-                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).removeClass("xs");
-                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).removeClass("xs");
-
-                    angular.element( document.querySelector( "#top-bar-mail-toggle")).addClass("default");
-                    angular.element( document.querySelector( "#top-bar-home-toggle")).addClass("default");
-                    angular.element( document.querySelector( "#top-bar-notifications-toggle")).addClass("default");
-                    angular.element( document.querySelector( "#top-bar-tasks-toggle")).addClass("default");
+                    angular.element( document.querySelector( "#tb-right-buttons")).removeClass("xs");
+                    angular.element( document.querySelector( "#tb-right-buttons")).addClass("default");
 
                     angular.element( document.querySelector( "#tb-right")).removeClass("xs");
+                    angular.element( document.querySelector( "#tb-left")).removeClass("xs");
 
                 }
             }
@@ -519,6 +509,7 @@ var GUI = angular.module('GUI',[])
                         angular.element( document.querySelector( "#page-instance")).addClass("lsb-active-lg");
                         break;
                 }
+                angular.element( document.querySelector("#lsb-toggle")).addClass("on");
 
             }
             this.deactivateLSB =  function(){
@@ -526,6 +517,9 @@ var GUI = angular.module('GUI',[])
                 angular.element( document.querySelector( "#page-instance")).removeClass("lsb-active-sm");
                 angular.element( document.querySelector( "#page-instance")).removeClass("lsb-active-md");
                 angular.element( document.querySelector( "#page-instance")).removeClass("lsb-active-lg");
+                angular.element( document.querySelector( "#page-instance")).removeClass("lsb-active-lg");
+                angular.element( document.querySelector("#lsb-toggle")).removeClass("on");
+
             }
             this.isLSBActive =  function(){
 
@@ -598,13 +592,17 @@ var GUI = angular.module('GUI',[])
                         angular.element( document.querySelector( "#page-instance")).addClass("rsb-active-lg");
                         break;
                 }
-
+                angular.element( document.querySelector("#rsb-toggle-default")).addClass("on");
+                angular.element( document.querySelector("#rsb-toggle-xs")).addClass("on");
             }
             this.deactivateRSB =  function(){
                 angular.element( document.querySelector( "#page-instance")).removeClass("rsb-active-xs");
                 angular.element( document.querySelector( "#page-instance")).removeClass("rsb-active-sm");
                 angular.element( document.querySelector( "#page-instance")).removeClass("rsb-active-md");
                 angular.element( document.querySelector( "#page-instance")).removeClass("rsb-active-lg");
+                angular.element( document.querySelector("#rsb-toggle-default")).removeClass("on");
+                angular.element( document.querySelector("#rsb-toggle-xs")).removeClass("on");
+
             }
             this.isRSBActive =  function(){
 
@@ -951,7 +949,7 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
             var urlParams = {};
             var headers = {loginID:loginID, password:password};
             var isArray = false;
-            RestService.get(url,urlParams,headers,isArray,'LOGIN_RESPONSE','LOGIN_ERROR');
+            return RestService.get(url,urlParams,headers,isArray,'LOGIN_RESPONSE','LOGIN_ERROR');
 
         };
         this.register = function(email, password) {
@@ -960,7 +958,7 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
             var urlParams = {};
             var headers = {};
             var payload = {email:email, password:password};
-            RestService.post(url,urlParams,headers,payload,'REGISTER_RESPONSE','REGISTER_ERROR');
+            return RestService.post(url,urlParams,headers,payload,'REGISTER_RESPONSE','REGISTER_ERROR');
 
         };
         this.validateUserSession = function(){
@@ -970,8 +968,9 @@ var Authentication = angular.module('Authentication',['Rest','ngCookies'])
             var urlParams = {};
             var headers = { loginID: userSession.loginID, token: userSession.token };
             var isArray = false;
-            RestService.get(url,urlParams,headers,isArray,'VALIDATE_USER_SESSION_RESPONSE','VALIDATE_USER_SESSION__ERROR');
+            return RestService.get(url,urlParams,headers,isArray,'VALIDATE_USER_SESSION_RESPONSE','VALIDATE_USER_SESSION__ERROR');
         };
+
     }]);
 
 //======================== SEARCH ========================================
@@ -989,11 +988,11 @@ var Search = angular.module('Search',['Rest'])
 
 //======================= REST ===========================================
 var Rest = angular.module('Rest',['ngResource'])
-    .service('RestService',['$rootScope','$resource',
-        function ($rootScope,$resource) {
+    .service('RestService',['$rootScope','$resource','$q',
+        function ($rootScope,$resource, $q) {
 
         this.get = function(url,urlParams,headers,isArray,successEvent,errorEvent){
-
+            var defer = $q.defer();
             var resource = $resource(
                 url,
                 {},
@@ -1008,21 +1007,25 @@ var Rest = angular.module('Rest',['ngResource'])
                         {
                             response: function(response)
                             {
+                                defer.resolve(response);
                                 $rootScope.$broadcast(successEvent, response.data);
                             },
                             responseError: function(responseError)
                             {
-                                $rootScope.$broadcast(errorEvent,responseError.status);
+                                defer.reject(responseError);
+                                $rootScope.$broadcast(errorEvent,responseError.statusText);
                             }
-                        }
+                        },
+                        timeout:5000
                     }
                 }
             );
 
             resource.get();
+            return defer.promise;
         }
         this.post = function(url,urlParams,headers,payload,successEvent,errorEvent){
-
+            var defer = $q.defer();
             var resource = $resource(
                 url,
                 {},
@@ -1036,19 +1039,129 @@ var Rest = angular.module('Rest',['ngResource'])
                         {
                             response: function(response)
                             {
+                                defer.resolve(response);
                                 $rootScope.$broadcast(successEvent, response.data);
                             },
                             responseError: function(responseError)
                             {
-                                $rootScope.$broadcast(errorEvent,responseError.status);
+                                defer.reject(responseError);
+                                $rootScope.$broadcast(errorEvent,responseError.statusText);
                             }
-                        }
+                        },
+                        timeout:5000
                     }
                 }
             );
 
             resource.post(payload);
+            return defer.promise;
         }
         this.put = function(url,urlParams,headers,payload,successEvent,errorEvent){}
         this.delete = function(url,urlParams,headers,payload,successEvent,errorEvent){}
     }]);
+
+//======================== USER PROFILE ================================
+var UserProfile = angular.module('UserProfile',['Rest'])
+    .controller('UserProfileCtrl',[ '$rootScope','$scope', 'UserProfileService',
+        function ($rootScope,$scope,UserProfileService) {
+
+
+            $scope.createUserProfile = function(){
+
+                var userProfile = {
+                    id: "",
+                    userDetails: {
+                        name: $scope.userDetails.name,
+                        gender: $scope.userDetails.gender,
+                        dob: $scope.userDetails.dob,
+                        pictureUrl: $scope.userDetails.pictureUrl
+                    }
+                };
+
+                UserProfileService.createUserProfile(userProfile);
+
+            }
+            $scope.$on('CREATE_USER_PROFILE_RESPONSE', function(event,data) {
+
+                if(data.responseStatus == 'SUCCESS')
+                {
+                    $rootScope.$broadcast('CREATE_USER_PROFILE_SUCCESS', data);
+                }
+                else if(data.responseStatus == 'FAIL')
+                {
+                    $rootScope.$broadcast('CREATE_USER_PROFILE_FAIL', data);
+                }
+                else
+                {
+                    $scope.createUserProfileMessage = 'Something went wrong';
+                }
+
+            });
+            $scope.$on('CREATE_USER_PROFILE__ERROR', function(event,errorCode) {
+
+                alert('Create User Profile Request Error');
+
+            });
+
+            $scope.getUserProfile = function(){
+
+                var userProfile = {
+                    id: "",
+                    userDetails: {
+                        name: $scope.userDetails.name,
+                        gender: $scope.userDetails.gender,
+                        dob: $scope.userDetails.dob,
+                        pictureUrl: $scope.userDetails.pictureUrl
+                    }
+                };
+
+                UserProfileService.createUserProfile(userProfile);
+
+            }
+            $scope.$on('GET_USER_PROFILE_RESPONSE', function(event,data) {
+
+                if(data.responseStatus == 'SUCCESS')
+                {
+                    $rootScope.$broadcast('CREATE_USER_PROFILE_SUCCESS', data);
+                }
+                else if(data.responseStatus == 'FAIL')
+                {
+                    $rootScope.$broadcast('CREATE_USER_PROFILE_FAIL', data);
+                }
+                else
+                {
+                    $scope.createUserProfileMessage = 'Something went wrong';
+                }
+
+            });
+            $scope.$on('GET_USER_PROFILE__ERROR', function(event,errorCode) {
+
+                alert('Create User Profile Request Error');
+
+            });
+
+
+        }])
+    .service('UserProfileService',['$rootScope','RestService',
+        function ($rootScope,RestService) {
+
+            this.userProfileId;
+            this.createUserProfile = function(userProfile){
+                var userSession = this.getUserSession();
+                var url = 'http://localhost:8181/cxf/x-platform/profile-rs/user-profile/create';
+                var urlParams = {};
+                var headers = { loginID: userSession.loginID, token: userSession.token };
+                var payload = userProfile;
+                return RestService.post(url,urlParams,headers, payload, 'CREATE_USER_PROFILE_RESPONSE','CREATE_USER_PROFILE__ERROR');
+            };
+            this.getUserProfile = function(userProfileId){
+                var userSession = this.getUserSession();
+                var url = 'http://localhost:8181/cxf/x-platform/profile-rs/user-profile/get/{user_profile_id}';
+                var urlParams = {user_profile_id:userProfileId};
+                var headers = { loginID: userSession.loginID, token: userSession.token };
+                var isArray = false;
+
+                return RestService.get(url,urlParams,headers, isArray, 'GET_USER_PROFILE_RESPONSE','GET_USER_PROFILE__ERROR');
+            };
+
+        }]);
