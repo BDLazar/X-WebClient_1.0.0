@@ -1,5 +1,5 @@
 //=============================== MAIN ===================================
-var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Search'])
+var XClient = angular.module('X-Client', ['ui.router','GUI','Search','User'])
     .config(['$stateProvider', '$urlRouterProvider',
         function($stateProvider, $urlRouterProvider) {
 
@@ -13,10 +13,10 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
                 templateUrl: 'app/partials/offline.html',
                 resolve:
                 {
-                    checkUserSession : function ($q,AuthenticationService)
+                    checkUserSession : function ($q,UserService)
                     {
                         var defer = $q.defer();
-                        if(AuthenticationService.isUserSessionAlive() == false)
+                        if(UserService.isUserSessionAlive() == false)
                         {
                             defer.resolve();
                         }
@@ -51,10 +51,10 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
                 templateUrl:'app/partials/authentication.html',
                 resolve:
                 {
-                    checkUserSession : function ($q,AuthenticationService)
+                    checkUserSession : function ($q,UserService)
                     {
                         var defer = $q.defer();
-                        if(AuthenticationService.isUserSessionAlive() == false)
+                        if(UserService.isUserSessionAlive() == false)
                         {
                             defer.resolve();
                         }
@@ -89,21 +89,21 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
                 templateUrl: 'app/partials/online.html',
                 resolve:
                 {
-                    checkUserSession : function ($q, $timeout,AuthenticationService)
+                    checkUserSession : function ($q, $timeout,UserService)
                     {
                         var defer = $q.defer();
-                        if(AuthenticationService.isUserSessionAlive() == false)
+                        if(UserService.isUserSessionAlive() == false)
                         {
                             defer.reject();
                         }
                         else
                         {
-                            var serverResponsePromise = AuthenticationService.validateUserSession();
+                            var serverResponsePromise = UserService.validateUserSession();
                             serverResponsePromise.then
                             (
                                 function(response)
                                 {
-                                    if(response.data.validateSessionResponseType == "USER_SESSION_VALID")
+                                    if(response.data.token != null && response.data.userAccountId != null)
                                     {
                                         defer.resolve();
                                     }
@@ -259,6 +259,9 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
             $scope.$on('LOGIN_SUCCESS', function(event,data) {
                 $state.transitionTo('online.userProfile');
             });
+            $scope.$on('LOGIN_FAIL', function(event,data) {
+                $state.transitionTo('online.userProfile');
+            });
             $scope.$on('LOGOUT_SUCCESS', function(event,data) {
                 $state.transitionTo('offline');
             });
@@ -272,7 +275,7 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Authentication','Se
 
         }]);
 
-//======================== GUI ==========================================
+//======================== GUI ===========================================
 var GUI = angular.module('GUI',[])
     .controller('GUICtrl',[ '$rootScope','$scope','$state','$window','GUIService','TopBarService','LeftSideBarService','RightSideBarService','BottomBarService','CenterContentService','SearchPanelService',
         function ($rootScope,$scope,$state,$window,GUIService,TopBarService,LeftSideBarService,RightSideBarService,BottomBarService,CenterContentService,SearchPanelService) {
@@ -764,214 +767,213 @@ var GUI = angular.module('GUI',[])
 
         }]);
 
+//======================== USER ==========================================
+var User = angular.module('User',['Rest','ngCookies'])
+    .controller('UserCtrl',[ '$rootScope','$scope','UserService',
+        function ($rootScope,$scope,UserService) {
 
-//======================== AUTHENTICATION ================================
-var Authentication = angular.module('Authentication',['Rest','ngCookies'])
-    .controller('AuthenticationCtrl',[ '$rootScope','$scope', 'AuthenticationService',
-        function ($rootScope,$scope,AuthenticationService) {
+            //Sign Up
+            var validateSignUpForm = function(signUpForm){
 
-        var validateLoginForm = function(loginID,password){
+                var isEmailOk = true;
+                var isPasswordOk = true;
+                var isConfPassOk = true;
+                var message = 'Missing Fields : '
 
-            var isloginOk = true;
-            var isPasswordOk = true;
-            var message = 'Missing Fields : ';
+                if(signUpForm.email == null || signUpForm.email == '')
+                {
+                    isEmailOk = false;
+                    message = message + 'Email ';
+                }
 
-            if(loginID == null || loginID == '')
-            {
-                isloginOk = false;
-                message = message + 'ID '
+                if(signUpForm.password == null || signUpForm.password == '')
+                {
+                    isPasswordOk = false;
+                    message = message + 'Password ';
+                }
 
-            }
+                if(signUpForm.confirmPassword == null || signUpForm.confirmPassword == '' )
+                {
+                    isConfPassOk = false;
+                    message = message + 'Confirm Password ';
+                }
 
-            if(password == null || password == '')
-            {
-                isPasswordOk = false;
-                message = message + 'Password '
-            }
+                if(isEmailOk && isPasswordOk && isConfPassOk)
+                {
+                    if(signUpForm.confirmPassword == signUpForm.password)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        message = 'Passwords do not match'
+                    }
+                }
 
-            if(isloginOk && isPasswordOk)
-            {
-                return true;
-            }
-            else
-            {
-                $scope.loginMessage = message;
+                $scope.signUpMessage = message;
                 return false;
+
             }
+            $scope.signUp = function(signUpForm){
 
-        }
-        $scope.login = function(loginID,password){
-
-            if(validateLoginForm(loginID,password))
-            {
-                AuthenticationService.login(loginID,password);
+                if(validateSignUpForm(signUpForm) == true)
+                {
+                    var userAccount = {
+                        id: null,
+                        userAccountType: 'BASIC',
+                        email: signUpForm.email,
+                        password: signUpForm.password,
+                        userProfiles: {}
+                    }
+                    UserService.createUserAccount(userAccount);
+                }
             }
+            $scope.$on('CREATE_USER_ACCOUNT_RESPONSE', function(event,response) {
 
-        }
-        $scope.$on('LOGIN_RESPONSE', function(event,data) {
+                alert('Account created, please log in');
 
-            if(data.loginResponseType == 'LOGIN_SUCCESS')
-            {
-                AuthenticationService.createUserSession(data.loginID, data.token);
-                $rootScope.userID = data.loginID;
+            });
+            $scope.$on('CREATE_USER_ACCOUNT__ERROR', function(event,error) {
 
-                $rootScope.$broadcast('LOGIN_SUCCESS', data);
-            }
-            else if(data.loginResponseType == 'LOGIN_FAILED')
-            {
-                $scope.loginMessage = 'Invalid Username or Password';
-            }
-            else
-            {
-                $scope.loginMessage = 'Something went wrong';
-            }
+                alert('Create User Profile Request Error');
 
-        });
-        $scope.$on('LOGIN_ERROR', function(event,errorCode) {
+            });
 
-            alert('Login Request Error');
+            //Login
+            var validateLoginForm = function(loginForm){
 
-        });
+                var isEmailOk = true;
+                var isPasswordOk = true;
+                var message = 'Missing Fields : ';
 
-        var validateRegisterForm = function(email, password, confirmPassword){
+                if(loginForm.email == null || loginForm.email == '')
+                {
+                    isEmailOk = false;
+                    message = message + 'Email '
 
-            var isEmailOk = true;
-            var isPasswordOk = true;
-            var isConfPassOk = true;
-            var message = 'Missing Fields : '
+                }
 
-            if(email == null || email == '')
-            {
-                isEmailOk = false;
-                message = message + 'Email ';
-            }
+                if(loginForm.password == null || loginForm.password == '')
+                {
+                    isPasswordOk = false;
+                    message = message + 'Password '
+                }
 
-            if(password == null || password == '')
-            {
-                isPasswordOk = false;
-                message = message + 'Password ';
-            }
-
-            if(confirmPassword == null || confirmPassword == '' )
-            {
-                isConfPassOk = false;
-                message = message + 'Confirm Password ';
-            }
-
-            if(isEmailOk && isPasswordOk && isConfPassOk)
-            {
-                if(confirmPassword == password)
+                if(isEmailOk && isPasswordOk)
                 {
                     return true;
                 }
                 else
                 {
-                    message = 'Passwords do not match'
+                    $scope.loginMessage = message;
+                    return false;
                 }
-            }
-
-            $scope.registerMessage = message;
-            return false;
-
-        }
-        $scope.register = function (email, password, confirmPassword) {
-
-            if(validateRegisterForm(email, password, confirmPassword))
-            {
-                AuthenticationService.register(email,password);
 
             }
+            $scope.login = function(loginForm){
 
-        };
-        $scope.$on('REGISTER_RESPONSE', function(event,data) {
+                if(validateLoginForm(loginForm))
+                {
+                    UserService.loginUserAccount(loginForm.email,loginForm.password);
+                }
 
-            if(data.registerResponseType == 'REGISTER_SUCCESS')
-            {
-                $rootScope.$broadcast(data.registerResponseType, data);
-                $scope.registerMessage = data.email + ' registered successfully';
             }
-            else if(data.registerResponseType == 'ALREADY_REGISTERED')
-            {
-                $scope.registerMessage = data.email + ' is already registered, Please Login instead';
+            $scope.$on('LOGIN_RESPONSE', function(event,response) {
+                var userAccountId = response.data.userAccountId;
+                var token = response.data.token;
+                if(userAccountId != null && token!= null)
+                {
+                    UserService.createUserSession(userAccountId,token);
+                    $rootScope.$broadcast('LOGIN_SUCCESS');
+                    return;
+                }
+
+                $rootScope.$broadcast('LOGIN_FAIL');
+
+            });
+            $scope.$on('LOGIN_ERROR', function(event,error) {
+
+                alert('Login Error');
+
+            });
+
+            //Logout
+            $scope.logout = function(){
+                UserService.killUserSession();
+                $rootScope.$broadcast('LOGOUT_SUCCESS');
             }
-            else if(data.registerResponseType == 'REGISTER_FAILED')
-            {
-                $scope.registerMessage = 'Unable to register ' + data.email + 'at this time';
-            }
-            else
-            {
-                $scope.registerMessage = 'Something went wrong';
-            }
 
-        });
-        $scope.$on('REGISTER_ERROR', function(event,errorCode) {
+            $scope.userAccount = null;
 
-            alert('Register Request Error');
+            $scope.$on('GET_USER_ACCOUNT_RESPONSE', function(event,response) {
+                $scope.userAccount = response.data;
+            });
+            $scope.$on('GET_USER_ACCOUNT__ERROR', function(event,error) {
+                $scope.userAccount = null;
+                alert('Could not retrieve User Account');
 
-        });
+            });
 
-        $scope.logout = function(){
-            AuthenticationService.killUserSession();
-            $rootScope.$broadcast('LOGOUT_SUCCESS');
-        };
-
-
-
-    }])
-    .service('AuthenticationService',['$rootScope','$cookieStore','RestService',
+        }])
+    .service('UserService',['$rootScope','$cookieStore','RestService',
         function ($rootScope,$cookieStore,RestService) {
 
-        this.createUserSession = function(loginID,token){
-            $cookieStore.put('token',token);
-            $cookieStore.put('loginID',loginID);
-        };
-        this.getUserSession = function(){
+            this.createUserAccount = function(userAccount){
+                var url = 'http://localhost:8181/cxf/x-platform/user-rs/create/userAccount';
+                var urlParams = {};
+                var headers = {};
+                var payload = userAccount;
+                return RestService.post(url,urlParams,headers, payload, 'CREATE_USER_ACCOUNT_RESPONSE','CREATE_USER_ACCOUNT__ERROR');
+            };
+            this.loginUserAccount = function(email, password){
+                var url = 'http://localhost:8181/cxf/x-platform/user-rs/login';
+                var urlParams = {};
+                var headers = {email:email, password:password};
+                var isArray = false;
 
-            return {token: $cookieStore.get('token'), loginID: $cookieStore.get('loginID') };
-        };
-        this.killUserSession = function(){
-            $cookieStore.remove('token');
-            $cookieStore.remove('loginID');
-        };
-        this.isUserSessionAlive = function(){
-            var userSession = this.getUserSession();
-            if( userSession.loginID != null && userSession.token != null )
-            {
-                return true;
-            }
+                return RestService.get(url,urlParams,headers,isArray, 'LOGIN_RESPONSE','LOGIN_ERROR');
+            };
+            this.getUserAccount = function(){
+                var userSession = this.getUserSession();
+                var url = 'http://localhost:8181/cxf/x-platform/user-rs/get/userAccount/:userAccountId';
+                var urlParams = {userAccountId: userSession.userAccountId};
+                var headers = {token: userSession.token};
+                var isArray = false;
 
-            return false;
-        };
+                return RestService.get(url,urlParams,headers,isArray, 'GET_USER_ACCOUNT_RESPONSE','GET_USER_ACCOUNT_ERROR');
+            };
+            this.createUserSession = function(userAccountId,token){
+                $cookieStore.put('userAccountId',userAccountId);
+                $cookieStore.put('token',token);
+            };
+            this.getUserSession = function(){
 
-        this.login = function(loginID, password) {
+                return {token: $cookieStore.get('token'), userAccountId: $cookieStore.get('userAccountId') };
+            };
+            this.killUserSession = function(){
+                $cookieStore.remove('userAccountId');
+                $cookieStore.remove('token');
+            };
+            this.isUserSessionAlive = function(){
+                var userSession = this.getUserSession();
+                if( userSession.userAccountId != null && userSession.token != null )
+                {
+                    return true;
+                }
 
-            var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/login';
-            var urlParams = {};
-            var headers = {loginID:loginID, password:password};
-            var isArray = false;
-            return RestService.get(url,urlParams,headers,isArray,'LOGIN_RESPONSE','LOGIN_ERROR');
+                return false;
+            };
+            this.validateUserSession = function(){
 
-        };
-        this.register = function(email, password) {
+                var userSession = this.getUserSession();
+                var url = 'http://localhost:8181/cxf/x-platform/user-rs/validate/session';
+                var urlParams = {};
+                var headers = { userAccountId: userSession.userAccountId, token: userSession.token };
+                var isArray = false;
+                return RestService.get(url,urlParams,headers,isArray,'VALIDATE_USER_SESSION_RESPONSE','VALIDATE_USER_SESSION_ERROR');
+            };
 
-            var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/register';
-            var urlParams = {};
-            var headers = {};
-            var payload = {email:email, password:password};
-            return RestService.post(url,urlParams,headers,payload,'REGISTER_RESPONSE','REGISTER_ERROR');
-
-        };
-        this.validateUserSession = function(){
-
-            var userSession = this.getUserSession();
-            var url = 'http://localhost:8181/cxf/x-platform/authentication-rs/validate-user-session';
-            var urlParams = {};
-            var headers = { loginID: userSession.loginID, token: userSession.token };
-            var isArray = false;
-            return RestService.get(url,urlParams,headers,isArray,'VALIDATE_USER_SESSION_RESPONSE','VALIDATE_USER_SESSION__ERROR');
-        };
-
-    }]);
+        }]);
 
 //======================== SEARCH ========================================
 var Search = angular.module('Search',['Rest'])
@@ -984,7 +986,6 @@ var Search = angular.module('Search',['Rest'])
 
 
         }]);
-
 
 //======================= REST ===========================================
 var Rest = angular.module('Rest',['ngResource'])
@@ -1008,12 +1009,12 @@ var Rest = angular.module('Rest',['ngResource'])
                             response: function(response)
                             {
                                 defer.resolve(response);
-                                $rootScope.$broadcast(successEvent, response.data);
+                                $rootScope.$broadcast(successEvent, response);
                             },
                             responseError: function(responseError)
                             {
                                 defer.reject(responseError);
-                                $rootScope.$broadcast(errorEvent,responseError.statusText);
+                                $rootScope.$broadcast(errorEvent,responseError);
                             }
                         },
                         timeout:5000
@@ -1040,12 +1041,12 @@ var Rest = angular.module('Rest',['ngResource'])
                             response: function(response)
                             {
                                 defer.resolve(response);
-                                $rootScope.$broadcast(successEvent, response.data);
+                                $rootScope.$broadcast(successEvent, response);
                             },
                             responseError: function(responseError)
                             {
                                 defer.reject(responseError);
-                                $rootScope.$broadcast(errorEvent,responseError.statusText);
+                                $rootScope.$broadcast(errorEvent,responseError);
                             }
                         },
                         timeout:5000
@@ -1060,108 +1061,3 @@ var Rest = angular.module('Rest',['ngResource'])
         this.delete = function(url,urlParams,headers,payload,successEvent,errorEvent){}
     }]);
 
-//======================== USER PROFILE ================================
-var UserProfile = angular.module('UserProfile',['Rest'])
-    .controller('UserProfileCtrl',[ '$rootScope','$scope', 'UserProfileService',
-        function ($rootScope,$scope,UserProfileService) {
-
-
-            $scope.createUserProfile = function(){
-
-                var userProfile = {
-                    id: "",
-                    userDetails: {
-                        name: $scope.userDetails.name,
-                        gender: $scope.userDetails.gender,
-                        dob: $scope.userDetails.dob,
-                        pictureUrl: $scope.userDetails.pictureUrl
-                    }
-                };
-
-                UserProfileService.createUserProfile(userProfile);
-
-            }
-            $scope.$on('CREATE_USER_PROFILE_RESPONSE', function(event,data) {
-
-                if(data.responseStatus == 'SUCCESS')
-                {
-                    $rootScope.$broadcast('CREATE_USER_PROFILE_SUCCESS', data);
-                }
-                else if(data.responseStatus == 'FAIL')
-                {
-                    $rootScope.$broadcast('CREATE_USER_PROFILE_FAIL', data);
-                }
-                else
-                {
-                    $scope.createUserProfileMessage = 'Something went wrong';
-                }
-
-            });
-            $scope.$on('CREATE_USER_PROFILE__ERROR', function(event,errorCode) {
-
-                alert('Create User Profile Request Error');
-
-            });
-
-            $scope.getUserProfile = function(){
-
-                var userProfile = {
-                    id: "",
-                    userDetails: {
-                        name: $scope.userDetails.name,
-                        gender: $scope.userDetails.gender,
-                        dob: $scope.userDetails.dob,
-                        pictureUrl: $scope.userDetails.pictureUrl
-                    }
-                };
-
-                UserProfileService.createUserProfile(userProfile);
-
-            }
-            $scope.$on('GET_USER_PROFILE_RESPONSE', function(event,data) {
-
-                if(data.responseStatus == 'SUCCESS')
-                {
-                    $rootScope.$broadcast('CREATE_USER_PROFILE_SUCCESS', data);
-                }
-                else if(data.responseStatus == 'FAIL')
-                {
-                    $rootScope.$broadcast('CREATE_USER_PROFILE_FAIL', data);
-                }
-                else
-                {
-                    $scope.createUserProfileMessage = 'Something went wrong';
-                }
-
-            });
-            $scope.$on('GET_USER_PROFILE__ERROR', function(event,errorCode) {
-
-                alert('Create User Profile Request Error');
-
-            });
-
-
-        }])
-    .service('UserProfileService',['$rootScope','RestService',
-        function ($rootScope,RestService) {
-
-            this.userProfileId;
-            this.createUserProfile = function(userProfile){
-                var userSession = this.getUserSession();
-                var url = 'http://localhost:8181/cxf/x-platform/profile-rs/user-profile/create';
-                var urlParams = {};
-                var headers = { loginID: userSession.loginID, token: userSession.token };
-                var payload = userProfile;
-                return RestService.post(url,urlParams,headers, payload, 'CREATE_USER_PROFILE_RESPONSE','CREATE_USER_PROFILE__ERROR');
-            };
-            this.getUserProfile = function(userProfileId){
-                var userSession = this.getUserSession();
-                var url = 'http://localhost:8181/cxf/x-platform/profile-rs/user-profile/get/{user_profile_id}';
-                var urlParams = {user_profile_id:userProfileId};
-                var headers = { loginID: userSession.loginID, token: userSession.token };
-                var isArray = false;
-
-                return RestService.get(url,urlParams,headers, isArray, 'GET_USER_PROFILE_RESPONSE','GET_USER_PROFILE__ERROR');
-            };
-
-        }]);

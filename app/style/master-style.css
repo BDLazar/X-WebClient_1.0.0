@@ -1,5 +1,5 @@
 /*===================================================== GENERAL GUI =================================================================*/
-body{/*background-color:#e5e5e5;*/ background-color: #333;}
+body{/*background-color:#e5e5e5;*/ background-color: #ffffff; color:#333;}
 /*===============TOP BAR==============*/
 #top-bar{
     min-height: 50px;

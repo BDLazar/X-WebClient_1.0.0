@@ -1,6 +1,6 @@
 <div data-ng-controller="GUICtrl">
     <!--Top bar-->
-    <nav id="top-bar" class="row navbar-fixed-top container-fluid">
+    <nav id="top-bar" class="row navbar-fixed-top container-fluid" data-ng-controller="UserCtrl">
         <div id="tb-left" class="col-xs-12 col-sm-6">
                 <a id="lsb-toggle" class="left-sidebar-toggle" data-ng-click="toggleLSB()">
                     <span class="sr-only">Toggle navigation</span>
@@ -44,7 +44,7 @@
             </div>
             <div class="col-xs-0 col-sm-5">
                 <div id="rsb-toggle-default" class="right-sidebar-toggle" data-ng-click="toggleRSB()">
-                    <p class="navbar-text">{{userID}}</p>
+                    <p class="navbar-text">{{userAccount.email}}</p>
                     <img src="app/images/userImage.png" class="img-circle"/>
                 </div>
             </div>
@@ -57,7 +57,7 @@
         </div>
         <!-- Right Sidebar -->
         <div id="right-side-bar">
-            <a id="right-side-bar-logout-btn" type="submit" class="btn btn-default btn-sm" data-ng-controller="AuthenticationCtrl" data-ng-click="logout()">Logout</a>
+            <a id="right-side-bar-logout-btn" type="submit" class="btn btn-default btn-sm" data-ng-controller="UserCtrl" data-ng-click="logout()">Logout</a>
             User Account & Profile Controls
         </div>
         <!--Center content -->
