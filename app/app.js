@@ -1,3 +1,7 @@
+//Directive to manipulate the DOM
+//Service to hold and retrieve data
+//Controller to assign data to the view via scope
+
 //=============================== MAIN ===================================
 var XClient = angular.module('X-Client', ['ui.router','GUI','Search','User'])
     .config(['$stateProvider', '$urlRouterProvider',
@@ -13,35 +17,21 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Search','User'])
                 templateUrl: 'app/partials/offline.html',
                 resolve:
                 {
-                    checkUserSession : function ($q,UserService)
+                    noUserSession : function ($q,UserService)
                     {
                         var defer = $q.defer();
-                        if(UserService.isUserSessionAlive() == false)
+                        if(UserService.userSessionExists() == false)
                         {
-                            defer.resolve();
+                            defer.resolve(true);
                         }
                         else
                         {
-                            defer.reject();
-                        }
-
-                        return defer.promise;
-                    },
-                    checkSearchPanel: function($q,SearchPanelService)
-                    {
-                        var defer = $q.defer();
-                        if(SearchPanelService.isSearchPanelActive() == false)
-                        {
-                            defer.resolve();
-                        }
-                        else
-                        {
-                            SearchPanelService.deactivateSearchPanel();
-                            defer.reject();
+                            defer.reject("User Session Exists");
                         }
 
                         return defer.promise;
                     }
+
                 }
             })
 
@@ -49,33 +39,19 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Search','User'])
 
                 url:'/authentication',
                 templateUrl:'app/partials/authentication.html',
+                controller: 'AuthenticationCtrl',
                 resolve:
                 {
-                    checkUserSession : function ($q,UserService)
+                    noUserSession : function ($q,UserService)
                     {
                         var defer = $q.defer();
-                        if(UserService.isUserSessionAlive() == false)
+                        if(UserService.userSessionExists() == false)
                         {
-                            defer.resolve();
+                            defer.resolve(true);
                         }
                         else
                         {
-                            defer.reject();
-                        }
-
-                        return defer.promise;
-                    },
-                    checkSearchPanel: function($q,SearchPanelService)
-                    {
-                        var defer = $q.defer();
-                        if(SearchPanelService.isSearchPanelActive() == false)
-                        {
-                            defer.resolve();
-                        }
-                        else
-                        {
-                            SearchPanelService.deactivateSearchPanel();
-                            defer.reject();
+                            defer.reject("User session exists");
                         }
 
                         return defer.promise;
@@ -87,51 +63,44 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Search','User'])
 
                 url: '/online',
                 templateUrl: 'app/partials/online.html',
+                controller: 'OnlineCtrl',
                 resolve:
                 {
-                    checkUserSession : function ($q, $timeout,UserService)
+                    userSession : function ($q,UserService)
                     {
                         var defer = $q.defer();
-                        if(UserService.isUserSessionAlive() == false)
+                        if(UserService.userSessionExists() == true)
                         {
-                            defer.reject();
+                            defer.resolve(true);
                         }
                         else
                         {
-                            var serverResponsePromise = UserService.validateUserSession();
-                            serverResponsePromise.then
-                            (
-                                function(response)
-                                {
-                                    if(response.data.token != null && response.data.userAccountId != null)
-                                    {
-                                        defer.resolve();
-                                    }
-                                    else
-                                    {
-                                        defer.reject();
-                                    }
-                                },
-                                function(responseError)
-                                {
-                                    defer.reject();
-                                }
-                            );
+                            defer.reject("User Session does not exist");
                         }
 
                         return defer.promise;
                     },
-                    checkSearchPanel: function($q,SearchPanelService)
+                    userAccount: function($q,UserService)
                     {
                         var defer = $q.defer();
-                        if(SearchPanelService.isSearchPanelActive() == false)
+                        if(UserService.userSessionExists() == true)
                         {
-                            defer.resolve();
+                            var serverResponse = UserService.getUserAccount()
+                            serverResponse.then
+                            (
+                                function(response)
+                                {
+                                    defer.resolve(response.data);
+                                },
+                                function(responseError)
+                                {
+                                    defer.reject("Could not load user account");
+                                }
+                            );
                         }
                         else
                         {
-                            SearchPanelService.deactivateSearchPanel();
-                            defer.reject();
+                            defer.reject("Could not load User Account because no user session exists");
                         }
 
                         return defer.promise;
@@ -145,17 +114,16 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Search','User'])
                 templateUrl:'app/partials/online/userProfile.html',
                 resolve:
                 {
-                    checkSearchPanel: function($q,SearchPanelService)
+                    userSession : function ($q,UserService)
                     {
                         var defer = $q.defer();
-                        if(SearchPanelService.isSearchPanelActive() == false)
+                        if(UserService.userSessionExists() == true)
                         {
-                            defer.resolve();
+                            defer.resolve(true);
                         }
                         else
                         {
-                            SearchPanelService.deactivateSearchPanel();
-                            defer.reject();
+                            defer.reject("User Session does not exist");
                         }
 
                         return defer.promise;
@@ -170,17 +138,16 @@ var XClient = angular.module('X-Client', ['ui.router','GUI','Search','User'])
                 templateUrl:'app/partials/online/newsFeed.html',
                 resolve:
                 {
-                    checkSearchPanel: function($q,SearchPanelService)
+                    userSession : function ($q,UserService)
                     {
                         var defer = $q.defer();
-                        if(SearchPanelService.isSearchPanelActive() == false)
+                        if(UserService.userSessionExists() == true)
                         {
-                            defer.resolve();
+                            defer.resolve(true);
                         }
                         else
                         {
-                            SearchPanelService.deactivateSearchPanel();
-                            defer.reject();
+                            defer.reject("User Session does not exist");
                         }
 
                         return defer.promise;
@@ -769,7 +736,7 @@ var GUI = angular.module('GUI',[])
 
 //======================== USER ==========================================
 var User = angular.module('User',['Rest','ngCookies'])
-    .controller('UserCtrl',[ '$rootScope','$scope','UserService',
+    .controller('AuthenticationCtrl',[ '$rootScope','$scope','UserService',
         function ($rootScope,$scope,UserService) {
 
             //Sign Up
@@ -897,23 +864,16 @@ var User = angular.module('User',['Rest','ngCookies'])
 
             });
 
+        }])
+    .controller('OnlineCtrl',[ '$rootScope','$scope','UserService','userAccount',
+        function ($rootScope,$scope,UserService,userAccount) {
+
+            $scope.userAccount = userAccount;
             //Logout
             $scope.logout = function(){
-                UserService.killUserSession();
+                UserService.deleteUserSession();
                 $rootScope.$broadcast('LOGOUT_SUCCESS');
             }
-
-            $scope.userAccount = null;
-
-            $scope.$on('GET_USER_ACCOUNT_RESPONSE', function(event,response) {
-                $scope.userAccount = response.data;
-            });
-            $scope.$on('GET_USER_ACCOUNT__ERROR', function(event,error) {
-                $scope.userAccount = null;
-                alert('Could not retrieve User Account');
-
-            });
-
         }])
     .service('UserService',['$rootScope','$cookieStore','RestService',
         function ($rootScope,$cookieStore,RestService) {
@@ -950,11 +910,11 @@ var User = angular.module('User',['Rest','ngCookies'])
 
                 return {token: $cookieStore.get('token'), userAccountId: $cookieStore.get('userAccountId') };
             };
-            this.killUserSession = function(){
+            this.deleteUserSession = function(){
                 $cookieStore.remove('userAccountId');
                 $cookieStore.remove('token');
             };
-            this.isUserSessionAlive = function(){
+            this.userSessionExists = function(){
                 var userSession = this.getUserSession();
                 if( userSession.userAccountId != null && userSession.token != null )
                 {
