@@ -1,53 +1,54 @@
 <div data-ng-controller="GUICtrl">
     <!--Top bar-->
     <nav id="top-bar" class="row navbar-fixed-top container-fluid">
-        <div id="tb-left" class="col-xs-12 col-sm-6">
-                <a id="lsb-toggle" class="left-sidebar-toggle" data-ng-click="toggleLSB()">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-                <a id="tb-logo" class="navbar-brand" data-ng-click="toggleLSB()">LOGO</a>
-                <div id="tb-search-bar" class="col-sm-7 col-lg-6">
-                    <input id="search-input" type="search" class="form-control input-sm" placeholder="Search" data-ng-model="searchString" data-ng-click="activateSearch()"/>
-                </div>
-                <div id="rsb-toggle-xs" class="right-sidebar-toggle" data-ng-click="toggleRSB()">
-                    <img src="app/images/userImage.png" class="img-circle"/>
-                </div>
-                <a id="top-bar-search-toggle" data-ng-click="activateSearch()">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="glyphicon glyphicon-search"></span>
-                </a>
-
+        <div id="tb-left" class="col-xs-5 col-sm-4">
+            <a id="lsb-toggle" class="left-sidebar-toggle" data-ng-click="toggleLSB()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a id="tb-logo" class="navbar-brand" data-ng-click="toggleLSB()">LOGO</a>
         </div>
-        <div id="tb-right" class="col-xs-12 col-sm-6">
-            <div class="col-xs-12 col-sm-7">
-                <div id="tb-right-buttons">
-                    <a id="top-bar-notifications-btn" class="tb-right-btn">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="glyphicon glyphicon-bell"></span>
-                    </a>
-                    <a id="top-bar-mail-btn" class="tb-right-btn" data-ng-click="toggleBB()">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="glyphicon glyphicon-envelope"></span>
-                    </a>
-                    <a id="top-bar-home-btn" class="tb-right-btn">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="glyphicon glyphicon-home"></span>
-                    </a>
-                    <a id="top-bar-tasks-btn" class="tb-right-btn">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="glyphicon glyphicon-tasks"></span>
-                    </a>
-                </div>
+        <div id="tb-middle" class="col-xs-2 col-sm-4">
+            <div id="tb-search-bar" class="col-sm-12">
+                <input id="search-input" type="search" class="form-control input-sm" placeholder="Search" data-ng-model="searchString" data-ng-click="activateSearch()"/>
             </div>
-            <div class="col-xs-0 col-sm-5">
-                <div id="rsb-toggle-default" class="right-sidebar-toggle" data-ng-click="toggleRSB()">
-                    <p class="navbar-text">{{userAccount.email}}</p>
-                    <img src="app/images/userImage.png" class="img-circle"/>
-                </div>
+        </div>
+        <div id="tb-right" class="col-xs-5 col-sm-4">
+            <div id="rsb-toggle" class="right-sidebar-toggle" data-ng-click="toggleRSB()">
+                <p id= "tb-user-name" class="navbar-text">{{userAccount.email}}</p>
+                <img src="app/images/userImage.png" class="img-circle"/>
             </div>
+            <a id="top-bar-search-toggle" data-ng-click="activateSearch()">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-search"></span>
+            </a>
+        </div>
+    </nav>
+    <!--Bottom Bar-->
+    <nav id="bottom-bar" class="row navbar-fixed-bottom container-fluid">
+        <div id="bb-left" class="hidden-xs col-sm-4">
+        </div>
+        <div id="bb-middle" class="col-xs-12 col-sm-4">
+            <a id="top-bar-notifications-btn" class="bb-btn col-xs-3">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-bell"></span>
+            </a>
+            <a id="top-bar-mail-btn" class="bb-btn col-xs-3">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-envelope"></span>
+            </a>
+            <a id="top-bar-home-btn" class="bb-btn col-xs-3">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-home"></span>
+            </a>
+            <a id="top-bar-tasks-btn" class="bb-btn col-xs-3">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-tasks"></span>
+            </a>
+        </div>
+        <div id="bb-right" class="hidden-xs col-sm-4">
         </div>
     </nav>
     <div id="page-instance">
@@ -63,12 +64,11 @@
         </div>
         <!--Center content -->
         <div class="center-content" ui-view>
-            Default online content
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce et lacus at justo facilisis vehicula ut et felis. Phasellus ut libero pretium nibh sollicitudin vulputate a sed urna. Ut dictum odio a est sodales blandit. Integer vitae nisl nisi, quis vehicula diam. Sed nec erat dictum nisi suscipit placerat. Quisque ligula enim, porttitor at sollicitudin eu, aliquet et justo. Ut eu dolor metus. Etiam vitae justo at metus auctor egestas ac in dolor. Etiam facilisis urna ipsum. Nulla facilisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer vulputate, sapien sit amet suscipit pellentesque, est ipsum tempor erat, eu molestie risus dolor sit amet risus. Vestibulum adipiscing gravida tincidunt. Integer eu quam et lacus luctus molestie.
 
         </div>
     </div>
-    <!--Bottom Bar-->
-    <div id="bottom-bar"></div>
+
     <!--Search panel-->
     <div id="search-panel">
         <div id="search-controls">

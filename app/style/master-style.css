@@ -9,14 +9,12 @@ body{/*background-color:#e5e5e5;*/ background-color: #ffffff; color:#333;}
     margin: 0;
     background-color: #222326;
 }
-#tb-right.xs{
-    background-color: #ffffff;
-    border-bottom: 1px solid #efefef;
-}
-#tb-left.xs {}
+#tb-left{min-height: inherit; max-height: inherit;}
+#tb-middle{min-height: inherit; max-height: inherit;}
+#tb-right{min-height: inherit; max-height: inherit;}
 
 #tb-logo{
-    color:#31C2C4;
+    color:#cccccc;
     margin-left:15px;
     cursor:context-menu;
     -webkit-transition-duration: 0.3s;
@@ -31,12 +29,11 @@ body{/*background-color:#e5e5e5;*/ background-color: #ffffff; color:#333;}
     transition-timing: ease-out;
 }
 #tb-logo:hover{
-    color: #ffffff;
+    color: #31C2C4;
 }
 
 #tb-search-bar{
     margin-top:10px;
-    float:right;
 }
 
 #top-bar-search-toggle{
@@ -146,52 +143,30 @@ body{/*background-color:#e5e5e5;*/ background-color: #ffffff; color:#333;}
     width: 32px;
 }
 
-#tb-right-buttons .tb-right-btn{
-    float:left;
-    display: block;
-    height:50px;
-    padding: 0px;
-    padding-top: 16px;
-    margin: 0px;
-    text-align: center;
-    text-decoration: none;
-    cursor:context-menu;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-#tb-right-buttons.default {
-    float: right;
-}
-#tb-right-buttons .tb-right-btn:active{
-    background-color: #111;
-    cursor:context-menu;
-}
-#tb-right-buttons.default .tb-right-btn{
-    width:50px;
-    color:#949599;
-}
-#tb-right-buttons.default .tb-right-btn:hover{
-    color: #ffffff;
-    border-bottom: 2px solid #31C2C4;
-}
-#tb-right-buttons.xs .tb-right-btn{
-    width: 25%;
-    color: #222326;
-}
-#tb-right-buttons.xs .tb-right-btn:hover{
-    background-color: #eeeeee;
-}
-#tb-right-buttons.xs #top-bar-signup-btn, #tb-right-buttons.xs #top-bar-login-btn{
-    width: 50%;
-}
-#tb-right-buttons.default #top-bar-signup-btn, #tb-right-buttons.default #top-bar-login-btn{
 
-    float: right;
-    width: 70px;
-    padding-left: 10px;
-    padding-right: 10px;
+#top-bar-signup-btn{
+    display: block;
+    padding:13px;
+    float:right;
+    color:#cccccc;
+}
+#top-bar-signup-btn:hover{
+    text-decoration: none;
+    cursor: context-menu;
+    color:#ffffff;
+    border-bottom: 4px solid #31C2C4;
+}
+#top-bar-login-btn{
+    display: block;
+    padding:13px;
+    float:right;
+    color:#cccccc;
+}
+#top-bar-login-btn:hover{
+    text-decoration: none;
+    cursor: context-menu;
+    color:#ffffff;
+    border-bottom: 4px solid #31C2C4;
 }
 
 /*===============SEARCH PANEL===========*/
@@ -229,9 +204,6 @@ body{/*background-color:#e5e5e5;*/ background-color: #ffffff; color:#333;}
     padding-top: 50px;
     transition: all .6s ease 0s;
 }
-#page-instance.xs{
-    padding-top: 100px;
-}
 #page-instance.lsb-active-xs {
     padding-left: 100%;
 }
@@ -264,8 +236,10 @@ body{/*background-color:#e5e5e5;*/ background-color: #ffffff; color:#333;}
     color: #ccc;
     background-color: #222326;
     border-top: 1px solid #333333;
+    border-bottom: 1px solid #333333;
     position: fixed;
-    height: 100%;
+    top:50px;
+    bottom: 50px;
     transition: all .6s ease 0s;
 }
 #left-side-bar.xs{
@@ -306,8 +280,10 @@ body{/*background-color:#e5e5e5;*/ background-color: #ffffff; color:#333;}
     color: #ccc;
     background-color: #222326;
     border-top: 1px solid #333333;
+    border-bottom: 1px solid #333333;
     position: fixed;
-    height: 100%;
+    top:50px;
+    bottom: 50px;
     transition: all .6s ease 0s;
 
 }
@@ -346,23 +322,32 @@ body{/*background-color:#e5e5e5;*/ background-color: #ffffff; color:#333;}
 
 /*===============BOTTOM BAR============*/
 #bottom-bar{
-    transition: all .4s ease 0s;
+    min-height: 50px;
+    max-height: 100px;
+    display: block;
+    padding:0;
+    margin: 0;
     background-color: #222326;
-    border-top: 1px solid #333333;
-    position:fixed;
-    width: 100%;
-    bottom:-100%;
-    top:100%;
-    z-index: 999999;
 }
-#bottom-bar.bottom-bar-active-xs{
-    top:100px;
-    bottom:0px;
+#bb-left{min-height: inherit; max-height: inherit;}
+#bb-middle{min-height: inherit; max-height: inherit;}
+#bb-right{min-height: inherit; max-height: inherit;}
+#bottom-bar .bb-btn{
+    color: #ffffff;
+    height: 50px;
 }
-#bottom-bar.bottom-bar-active-default{
-    top:50px;
-    bottom:0px;
+#bottom-bar .bb-btn:hover{
+    text-decoration: none;
+    background-color: #333333;
 }
+#bottom-bar .bb-btn .glyphicon{
+    display:block;
+    width:14px;
+    margin: 0 auto;
+    padding-top: 17px;
+    padding-bottom: 17px;
+}
+
 
 /*===================================================== LOGIN PAGE =================================================================*/
 

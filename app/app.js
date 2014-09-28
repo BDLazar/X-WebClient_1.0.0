@@ -265,10 +265,6 @@ var GUI = angular.module('GUI',[])
                 {
                     SearchPanelService.deactivateSearchPanel();
                 }
-                if(BottomBarService.isBBActive())
-                {
-                    BottomBarService.deactivateBB();
-                }
                 LeftSideBarService.activateLSB(device);
 
                 if((device == 'mobile' || device == 'tablet') && RightSideBarService.isRSBActive())
@@ -292,37 +288,12 @@ var GUI = angular.module('GUI',[])
                 {
                     SearchPanelService.deactivateSearchPanel();
                 }
-                if(BottomBarService.isBBActive())
-                {
-                    BottomBarService.deactivateBB();
-                }
                 RightSideBarService.activateRSB(device);
 
                 if((device == 'mobile' || device == 'tablet')&& LeftSideBarService.isLSBActive())
                 {
                     LeftSideBarService.deactivateLSB();
                 }
-            }
-
-        }
-        $scope.toggleBB = function(){
-
-            if(BottomBarService.isBBActive())
-            {
-                BottomBarService.deactivateBB();
-            }
-            else
-            {
-                if(RightSideBarService.isRSBActive())
-                {
-                    RightSideBarService.deactivateRSB();
-                }
-                if(LeftSideBarService.isLSBActive())
-                {
-                    LeftSideBarService.deactivateLSB();
-                }
-                var device = GUIService.getDevice();
-                BottomBarService.activateBB(device);
             }
 
         }
@@ -407,17 +378,7 @@ var GUI = angular.module('GUI',[])
                 {
                     angular.element( document.querySelector( "#top-bar-search-toggle")).show();
                     angular.element( document.querySelector( "#tb-search-bar")).hide();
-
-                    angular.element( document.querySelector( "#rsb-toggle-xs")).show();
-                    angular.element( document.querySelector( "#rsb-toggle-default")).hide();
-
                     angular.element( document.querySelector( "#tb-user-name")).hide();
-
-                    angular.element( document.querySelector( "#tb-right-buttons")).removeClass("default");
-                    angular.element( document.querySelector( "#tb-right-buttons")).addClass("xs");
-
-                    angular.element( document.querySelector( "#tb-right")).addClass("xs");
-                    angular.element( document.querySelector( "#tb-left")).addClass("xs");
 
                 }
                 //we are on a tablet screen
@@ -425,36 +386,14 @@ var GUI = angular.module('GUI',[])
                 {
                     angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
                     angular.element( document.querySelector( "#tb-search-bar")).show();
-
-                    angular.element( document.querySelector( "#rsb-toggle-xs")).hide();
-                    angular.element( document.querySelector( "#rsb-toggle-default")).show();
-
-                    angular.element( document.querySelector( "#tb-user-name")).hide();
-
-                    angular.element( document.querySelector( "#tb-right-buttons")).removeClass("xs");
-                    angular.element( document.querySelector( "#tb-right-buttons")).addClass("default");
-
-                    angular.element( document.querySelector( "#tb-right")).removeClass("xs");
-                    angular.element( document.querySelector( "#tb-left")).removeClass("xs");
-
+                    angular.element( document.querySelector( "#tb-user-name")).show();
                 }
                 //we are on a desktop or large device screen
                 else if(device == 'desktop' || device== 'large')
                 {
                     angular.element( document.querySelector( "#top-bar-search-toggle")).hide();
                     angular.element( document.querySelector( "#tb-search-bar")).show();
-
-                    angular.element( document.querySelector( "#rsb-toggle-xs")).hide();
-                    angular.element( document.querySelector( "#rsb-toggle-default")).show();
-
                     angular.element( document.querySelector( "#tb-user-name")).show();
-
-                    angular.element( document.querySelector( "#tb-right-buttons")).removeClass("xs");
-                    angular.element( document.querySelector( "#tb-right-buttons")).addClass("default");
-
-                    angular.element( document.querySelector( "#tb-right")).removeClass("xs");
-                    angular.element( document.querySelector( "#tb-left")).removeClass("xs");
-
                 }
             }
 
@@ -626,41 +565,8 @@ var GUI = angular.module('GUI',[])
     .service('BottomBarService',['$rootScope',
         function ($rootScope) {
 
-            this.activateBB =  function(device){
-
-                switch(device)
-                {
-                    case 'mobile':
-                        angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active-xs");
-                        break;
-                    default :
-                        angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active-default");
-                        break;
-                }
-
-            }
-            this.deactivateBB =  function(){
-                angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active-xs");
-                angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active-default");
-            }
-            this.isBBActive =  function(){
-                return angular.element( document.querySelector( "#bottom-bar")).hasClass("bottom-bar-active-xs") || angular.element( document.querySelector( "#bottom-bar")).hasClass("bottom-bar-active-default");
-            }
             this.handleElements = function(device){
 
-                if(this.isBBActive())
-                {
-                    if(device == 'mobile')
-                    {
-                        angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active-xs");
-                        angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active-default");
-                    }
-                    else
-                    {
-                        angular.element( document.querySelector( "#bottom-bar")).addClass("bottom-bar-active-default");
-                        angular.element( document.querySelector( "#bottom-bar")).removeClass("bottom-bar-active-xs");
-                    }
-                }
             }
 
         }])

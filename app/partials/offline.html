@@ -1,36 +1,26 @@
 <div data-ng-controller="GUICtrl">
 
     <!--Top bar-->
-    <div id="top-panel"></div>
     <nav id="top-bar" class="row navbar-fixed-top container-fluid">
-        <div id="tb-left" class="col-xs-12 col-sm-6">
-            <a id="lsb-toggle" class="left-sidebar-toggle" data-ng-click="toggleLSB()">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a id="tb-logo" class="navbar-brand" href="#">LOGO</a>
-            <div id="tb-search-bar" class="col-sm-7">
+        <div id="tb-left" class="col-xs-3 col-sm-4">
+            <a id="tb-logo" class="navbar-brand">LOGO</a>
+        </div>
+        <div id="tb-middle" class="col-xs-1 col-sm-4">
+            <div id="tb-search-bar" class="col-sm-12">
                 <input id="search-input" type="search" class="form-control input-sm" placeholder="Search" data-ng-model="searchString" data-ng-click="activateSearch()"/>
             </div>
+        </div>
+        <div id="tb-right" class="col-xs-8 col-sm-4">
             <a id="top-bar-search-toggle" data-ng-click="activateSearch()">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="glyphicon glyphicon-search"></span>
             </a>
-        </div>
-        <div id="tb-right" class="col-xs-12 col-sm-6">
-            <div id="tb-right-buttons">
-                <a id="top-bar-signup-btn" type="button" class="tb-right-btn" data-ng-click="goToAuthentication()">Sign Up</a>
-                <a id="top-bar-login-btn" type="button" class="tb-right-btn" data-ng-click="goToAuthentication()">Log In</a>
-            </div>
+            <a id="top-bar-signup-btn" data-ng-click="goToAuthentication()">Sign Up</a>
+            <a id="top-bar-login-btn" data-ng-click="goToAuthentication()">Log In</a>
         </div>
     </nav>
-    <div id="page-instance">
-        <!-- Left Sidebar -->
-        <div id="left-side-bar">
 
-        </div>
+    <div id="page-instance">
         <!--Center content -->
         <div class="center-content" ui-view>
             Default offline content
