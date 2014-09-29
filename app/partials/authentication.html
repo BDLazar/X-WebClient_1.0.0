@@ -1,4 +1,4 @@
-<div id="authentication" class="modal-dialog modal-sm" data-ng-controller="AuthenticationCtrl">
+<div id="authentication" class="modal-dialog modal-sm">
     <div class="modal-content">
         <div class="modal-header">
             <br>
@@ -19,7 +19,7 @@
                             <!-- Text input-->
                             <div class="control-group">
                                 <div class="controls">
-                                    <input id="login-id-input"  type="text" class="form-control" placeholder="ID" class="input-medium" data-ng-model="login.id">
+                                    <input id="email-input"  type="text" class="form-control" placeholder="Email" class="input-medium" data-ng-model="loginForm.email">
                                 </div>
                             </div>
                             <br>
@@ -27,7 +27,7 @@
                             <!-- Password input-->
                             <div class="control-group">
                                 <div class="controls">
-                                    <input id="password-input" class="form-control" type="password" placeholder="Password" class="input-medium" data-ng-model="login.password">
+                                    <input id="password-input" class="form-control" type="password" placeholder="Password" class="input-medium" data-ng-model="loginForm.password">
                                 </div>
                             </div>
                             <br><br>
@@ -36,9 +36,9 @@
                             <div class="control-group">
                                 <div class="controls">
                                     <center>
-                                        <button id="login-btn" class="btn btn-sm btn-success" data-ng-click="login(login.id,login.password)">Log In</button>
+                                        <button id="login-btn" class="btn btn-sm btn-success" data-ng-click="login(loginForm)">Log In</button>
                                         <span> -or-</span>
-                                        <button href="#register-content" data-toggle="tab" class="btn btn-sm btn-primary">Register</button>
+                                        <button href="#signup-content" data-toggle="tab" class="btn btn-sm btn-primary">Sign Up</button>
                                     </center>
                                 </div>
                             </div>
@@ -49,9 +49,9 @@
                         </fieldset>
                     </form>
                 </div>
-                <div class="tab-pane fade" id="register-content">
+                <div class="tab-pane fade" id="signup-content">
                     <center>
-                        <label class="control-label center">Register</label>
+                        <label class="control-label center">Sign Up</label>
                     </center>
                     <br>
                     <form class="form-horizontal">
@@ -60,7 +60,7 @@
                             <!-- Text input-->
                             <div class="control-group">
                                 <div class="controls">
-                                    <input id="register-email-input"  class="form-control" type="text" placeholder="Email" class="input-large"  data-ng-model="register.email">
+                                    <input id="signup-email-input"  class="form-control" type="text" placeholder="Email" class="input-large"  data-ng-model="signUpForm.email">
                                 </div>
                             </div>
                             <br>
@@ -68,15 +68,15 @@
                             <!-- Password input-->
                             <div class="control-group">
                                 <div class="controls">
-                                    <input id="register-password" name="password" class="form-control" type="password" placeholder="Password" class="input-large" data-ng-model="register.password">
+                                    <input id="signup-password" name="password" class="form-control" type="password" placeholder="Password" class="input-large" data-ng-model="signUpForm.password">
                                 </div>
                             </div>
                             <br>
 
-                            <!-- Text input-->
+                            <!-- Confirm Password input-->
                             <div class="control-group">
                                 <div class="controls">
-                                    <input id="register-confirm-password" class="form-control" type="password" placeholder="Confirm Password" class="input-large" data-ng-model="register.confirmPassword">
+                                    <input id="signup-confirm-password" class="form-control" type="password" placeholder="Confirm Password" class="input-large" data-ng-model="signUpForm.confirmPassword">
                                 </div>
                             </div>
                             <br><br>
@@ -84,7 +84,7 @@
                             <div class="control-group">
                                 <div class="controls" class="center">
                                     <center>
-                                        <button id="register-btn" class="btn btn-sm btn-success" data-ng-click="register(register.email,register.password,register.confirmPassword)">Register</button>
+                                        <button id="signup-btn" class="btn btn-sm btn-success" data-ng-click="signUp(signUpForm)">Sign Up</button>
                                         -or-
                                         <button href="#login-content" data-toggle="tab" class="btn btn-sm btn-primary">Login</button>
                                     </center>
@@ -92,7 +92,7 @@
                             </div>
                             <br>
                             <center>
-                                <label class="control-label">{{registerMessage}}</label>
+                                <label class="control-label">{{signUpMessage}}</label>
                             </center>
                         </fieldset>
                     </form>

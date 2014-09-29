@@ -1,5 +1,5 @@
 /*===================================================== GENERAL GUI =================================================================*/
-body{background-color:#f8f8f8; }
+body{/*background-color:#e5e5e5;*/ background-color: #ffffff; color:#333;}
 /*===============TOP BAR==============*/
 #top-bar{
     min-height: 50px;
@@ -9,11 +9,68 @@ body{background-color:#f8f8f8; }
     margin: 0;
     background-color: #222326;
 }
-#tb-right.xs{
-    background-color: #ffffff;
-    border-bottom: 1px solid #efefef;
+#tb-left{min-height: inherit; max-height: inherit;}
+#tb-middle{min-height: inherit; max-height: inherit;}
+#tb-right{min-height: inherit; max-height: inherit;}
+
+#tb-logo{
+    color:#cccccc;
+    margin-left:15px;
+    cursor:context-menu;
+    -webkit-transition-duration: 0.3s;
+    -webkit-transition-timing: ease-out;
+    -o-transition-duration: 0.3s;
+    -o-transition-timing: ease-out;
+    -moz-transition-duration: 0.3s;
+    -moz-transition-timing: ease-out;
+    -ms-transition-duration: 0.3s;
+    -ms-transition-timing: ease-out;
+    transition-duration: 0.3s;
+    transition-timing: ease-out;
+}
+#tb-logo:hover{
+    color: #31C2C4;
 }
 
+#tb-search-bar{
+    margin-top:10px;
+}
+
+#top-bar-search-toggle{
+    display: block;
+    float: right;
+    height:50px;
+    width: 50px;
+    padding: 0px;
+    margin: 0px;
+    color: #949599;
+    border-left: 1px solid #444;
+    cursor:context-menu;
+}
+#top-bar-search-toggle:active{
+    background-color: #31C2C4;
+    color: #ffffff;
+}
+#top-bar-search-toggle:hover{
+    background-color: #31C2C4;
+    color: #ffffff;
+}
+#top-bar-search-toggle.on{
+    background-color: #31C2C4;
+    color: #ffffff;
+}
+#top-bar-search-toggle .glyphicon{
+    margin-left:19px;
+    margin-top: 16px;
+}
+
+#lsb-toggle.on {
+    background-color: #31C2C4;
+    color: #ffffff;
+}
+#lsb-toggle.on .icon-bar{
+    background-color: #ffffff;
+}
 .left-sidebar-toggle {
     display: block;
     float: left;
@@ -22,6 +79,16 @@ body{background-color:#f8f8f8; }
     padding: 0px;
     margin: 0px;
     color:#949599;
+    cursor:context-menu;
+    border-right: 1px solid #444;
+}
+.left-sidebar-toggle:active{
+    background-color: #31C2C4;
+    color: #ffffff;
+}
+.left-sidebar-toggle:hover{
+    background-color: #31C2C4;
+    color: #ffffff;
 }
 .left-sidebar-toggle:hover .icon-bar {
     background: #ffffff;
@@ -34,238 +101,72 @@ body{background-color:#f8f8f8; }
     background: #949599;
     margin-left:14px;
     margin-top: 17px;
-    -webkit-transition-duration: 0.3s;
-    -webkit-transition-timing: ease-out;
-    -o-transition-duration: 0.3s;
-    -o-transition-timing: ease-out;
-    -moz-transition-duration: 0.3s;
-    -moz-transition-timing: ease-out;
-    -ms-transition-duration: 0.3s;
-    -ms-transition-timing: ease-out;
-    transition-duration: 0.3s;
-    transition-timing: ease-out;
 }
 .left-sidebar-toggle .icon-bar + .icon-bar {
     margin-top: 4px;
 }
 
-#tb-logo{
-    float:left;
-    color:#ffffff;
-    margin-left: 15px;
-    margin-right: 20px;
+#rsb-toggle-default.on {
+    background-color: #31C2C4;
+    color: #ffffff;
 }
-
-#tb-user-info{
+#rsb-toggle-xs.on {
+    background-color: #31C2C4;
+    color: #ffffff;
+    border-left: 1px solid #38C0C2;
+}
+.right-sidebar-toggle{
     float: right;
-    color: #eeeeee;
-}
-#tb-user-info:hover{
-    background: #ffffff !important;
-    color: #222326;
-}
-#tb-user-info p{
-    float: right;
-    margin-left:0px;
-    margin-right: 9px;
+    color:#949599;
+    display: block;
     cursor:context-menu;
+    border-left: 1px solid #444;
+}
+.right-sidebar-toggle:active{
+    color: #ffffff;
+    background-color: #31C2C4;
+}
+.right-sidebar-toggle:hover{
+    color: #ffffff;
+    background-color: #31C2C4;
+}
+.right-sidebar-toggle p{
+    margin-left: 9px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
-#tb-user-info img{
-    float: left;
-    margin:9px 9px 9px 9px;
+.right-sidebar-toggle img{
+    margin: 9px;
     height: 32px;
     width: 32px;
 }
 
-#tb-search-bar{
-    margin-top:10px;
-}
-#top-bar-search-toggle{
+
+#top-bar-signup-btn{
     display: block;
-    float: right;
-    height:50px;
-    width: 50px;
-    padding: 0px;
-    margin: 0px;
-    color: #949599;
-    -webkit-transition-duration: 0.3s;
-    -webkit-transition-timing: ease-out;
-    -o-transition-duration: 0.3s;
-    -o-transition-timing: ease-out;
-    -moz-transition-duration: 0.3s;
-    -moz-transition-timing: ease-out;
-    -ms-transition-duration: 0.3s;
-    -ms-transition-timing: ease-out;
-    transition-duration: 0.3s;
-    transition-timing: ease-out;
+    padding:13px;
+    float:right;
+    color:#cccccc;
 }
-#top-bar-search-toggle:hover{
-    color: #ffffff;
+#top-bar-signup-btn:hover{
+    text-decoration: none;
+    cursor: context-menu;
+    color:#ffffff;
+    border-bottom: 4px solid #31C2C4;
 }
-#top-bar-search-toggle .glyphicon{
-    margin-left:19px;
-    margin-top: 16px;
-}
-
-#top-bar-mail-toggle.default,
-#top-bar-home-toggle.default,
-#top-bar-notifications-toggle.default,
-#top-bar-tasks-toggle.default{
-    width: 50px;
-    color:#949599;
-}
-
-#top-bar-mail-toggle.xs,
-#top-bar-home-toggle.xs,
-#top-bar-notifications-toggle.xs,
-#top-bar-tasks-toggle.xs{
-    width: 25%;
-    color: #222326;
-}
-
-.right-sidebar-toggle {
-    display: block;
-    float: right;
-    height:50px;
-    width: 50px;
-    padding: 0px;
-    margin: 0px;
-
-}
-.right-sidebar-toggle:hover .icon-bar {
-    background: #ffffff;
-}
-.right-sidebar-toggle .icon-bar {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: #949599;
-    margin-left:14px;
-    margin-top: 17px;
-    -webkit-transition-duration: 0.3s;
-    -webkit-transition-timing: ease-out;
-    -o-transition-duration: 0.3s;
-    -o-transition-timing: ease-out;
-    -moz-transition-duration: 0.3s;
-    -moz-transition-timing: ease-out;
-    -ms-transition-duration: 0.3s;
-    -ms-transition-timing: ease-out;
-    transition-duration: 0.3s;
-    transition-timing: ease-out;
-}
-.right-sidebar-toggle .icon-bar + .icon-bar {
-    margin-top: 4px;
-}
-
-#top-bar-mail-toggle{
-     float:left;
-     display: block;
-     height:50px;
-     padding: 0px;
-     margin: 0px;
-     text-align: center;
- }
-#top-bar-mail-toggle.default:hover{
-    color: #ffffff;
-}
-#top-bar-mail-toggle.xs:hover{
-    background-color: #eeeeee;
-}
-#top-bar-mail-toggle .glyphicon{
-
-    margin-top: 16px;
-}
-
-#top-bar-home-toggle{
-    display: block;
-    float: left;
-    height:50px;
-    padding: 0px;
-    margin: 0px;
-    color: #949599;
-    text-align: center;
-}
-#top-bar-home-toggle.default:hover{
-    color: #ffffff;
-}
-#top-bar-home-toggle.xs:hover{
-    background-color: #eeeeee;
-}
-#top-bar-home-toggle .glyphicon{
-    margin-top: 16px;
-}
-
-#top-bar-notifications-toggle{
-    display: block;
-    float: left;
-    height:50px;
-    padding: 0px;
-    margin: 0px;
-    color: #949599;
-    text-align: center;
-}
-#top-bar-notifications-toggle.default:hover{
-    color: #ffffff;
-}
-#top-bar-notifications-toggle.xs:hover{
-    background-color: #eeeeee;
-}
-
-#top-bar-notifications-toggle .glyphicon{
-
-    margin-top: 16px;
-}
-
-#top-bar-tasks-toggle{
-    display: block;
-    float: left;
-    height:50px;
-    padding: 0px;
-    margin: 0px;
-    color: #949599;
-    text-align: center;
-}
-#top-bar-tasks-toggle.default:hover{
-    color: #ffffff;
-}
-#top-bar-tasks-toggle.xs:hover{
-    background-color: #eeeeee;
-}
-#top-bar-tasks-toggle .glyphicon{
-    margin-top: 16px;
-}
-
 #top-bar-login-btn{
     display: block;
-    float:right;
-    height: 50px;
-    color: #949599;
     padding:13px;
-    cursor:context-menu;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-transition-duration: 0.3s;
-    -webkit-transition-timing: ease-out;
-    -o-transition-duration: 0.3s;
-    -o-transition-timing: ease-out;
-    -moz-transition-duration: 0.3s;
-    -moz-transition-timing: ease-out;
-    -ms-transition-duration: 0.3s;
-    -ms-transition-timing: ease-out;
-    transition-duration: 0.3s;
-    transition-timing: ease-out;
-
+    float:right;
+    color:#cccccc;
 }
 #top-bar-login-btn:hover{
-
-    color: #ffffff;
     text-decoration: none;
+    cursor: context-menu;
+    color:#ffffff;
+    border-bottom: 4px solid #31C2C4;
 }
 
 /*===============SEARCH PANEL===========*/
@@ -303,43 +204,42 @@ body{background-color:#f8f8f8; }
     padding-top: 50px;
     transition: all .6s ease 0s;
 }
-#page-instance.xs{
-    padding-top: 100px;
-}
 #page-instance.lsb-active-xs {
     padding-left: 100%;
 }
 #page-instance.lsb-active-sm {
-    padding-left: 33.3%;
+    padding-left: 21%;
 }
 #page-instance.lsb-active-md {
-    padding-left: 25%;
+    padding-left: 20%;
 }
 #page-instance.lsb-active-lg {
-    padding-left: 16.6%;
+    padding-left: 15%;
 }
 #page-instance.rsb-active-xs {
     padding-right: 100%;
 }
 #page-instance.rsb-active-sm {
-    padding-right: 33.3%;
+    padding-right: 21%;
 }
 #page-instance.rsb-active-md {
-    padding-right: 25%;
+    padding-right: 20%;
 }
 #page-instance.rsb-active-lg {
-    padding-right: 16.6%;
+    padding-right: 15%;
 }
 .center-content {
-
 }
 
 /*===============LEFT SIDE BAR===========*/
 #left-side-bar {
+    color: #ccc;
     background-color: #222326;
     border-top: 1px solid #333333;
+    border-bottom: 1px solid #333333;
     position: fixed;
-    height: 100%;
+    top:50px;
+    bottom: 50px;
     transition: all .6s ease 0s;
 }
 #left-side-bar.xs{
@@ -348,16 +248,19 @@ body{background-color:#f8f8f8; }
     border-right: 1px solid #444;
 }
 #left-side-bar.sm{
-    left: -33.3%;
-    width: 33.3%;
+    left: -21%;
+    width: 21%;
+    border-top: 1px solid #333;
 }
 #left-side-bar.md{
-    left: -25%;
-    width: 25%;
+    left: -20%;
+    width: 20%;
+    border-top: 1px solid #333;
 }
 #left-side-bar.lg{
-    left: -16.6%;
-    width: 16.6%;
+    left: -15%;
+    width: 15%;
+    border-top: 1px solid #333;
 }
 #page-instance.lsb-active-xs #left-side-bar {
     left: 0px;
@@ -374,11 +277,15 @@ body{background-color:#f8f8f8; }
 
 /*===============RIGHT SIDE BAR===========*/
 #right-side-bar {
+    color: #ccc;
     background-color: #222326;
     border-top: 1px solid #333333;
+    border-bottom: 1px solid #333333;
     position: fixed;
-    height: 100%;
+    top:50px;
+    bottom: 50px;
     transition: all .6s ease 0s;
+
 }
 #right-side-bar.xs{
     right: -100%;
@@ -386,16 +293,19 @@ body{background-color:#f8f8f8; }
     border-left: 1px solid #000;
 }
 #right-side-bar.sm{
-    right: -33.3%;
-    width: 33.3%;
+    right: -21%;
+    width: 21%;
+    border-top: 1px solid #333;
 }
 #right-side-bar.md{
-    right: -25%;
-    width: 25%;
+    right: -20%;
+    width: 20%;
+    border-top: 1px solid #333;
 }
 #right-side-bar.lg{
-    right: -16.6%;
-    width: 16.6%;
+    right: -15%;
+    width: 15%;
+    border-top: 1px solid #333;
 }
 #page-instance.rsb-active-xs #right-side-bar {
     right: 0px;
@@ -412,29 +322,34 @@ body{background-color:#f8f8f8; }
 
 /*===============BOTTOM BAR============*/
 #bottom-bar{
-    transition: all .4s ease 0s;
+    min-height: 50px;
+    max-height: 100px;
+    display: block;
+    padding:0;
+    margin: 0;
     background-color: #222326;
-    border-top: 1px solid #333333;
-    position:fixed;
-    width: 100%;
-    bottom:-100%;
-    top:100%;
-    z-index: 999999;
 }
-#bottom-bar.bottom-bar-active-xs{
-    top:100px;
-    bottom:0px;
+#bb-left{min-height: inherit; max-height: inherit;}
+#bb-middle{min-height: inherit; max-height: inherit;}
+#bb-right{min-height: inherit; max-height: inherit;}
+#bottom-bar .bb-btn{
+    color: #ffffff;
+    height: 50px;
 }
-#bottom-bar.bottom-bar-active-default{
-    top:50px;
-    bottom:0px;
+#bottom-bar .bb-btn:hover{
+    text-decoration: none;
+    background-color: #333333;
 }
-
-
+#bottom-bar .bb-btn .glyphicon{
+    display:block;
+    width:14px;
+    margin: 0 auto;
+    padding-top: 17px;
+    padding-bottom: 17px;
+}
 
 
 /*===================================================== LOGIN PAGE =================================================================*/
-
 
 #authentication{
 
